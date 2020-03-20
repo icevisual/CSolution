@@ -50,7 +50,7 @@ public:
 		unordered_map<int, vector<vector<int>>> hash;
 		unordered_map<int, vector<vector<int>>>::iterator l_it;
 
-		sort(nums.begin(),nums.end());
+		sort(nums.begin(), nums.end());
 
 		for (int i = 0; i < nums.size(); i++) {
 
@@ -61,31 +61,35 @@ public:
 				l_it = hash.find(target - s);
 				if (l_it != hash.end())
 				{
-					vector<int> pr = { l_it->second[0][0],l_it->second[0][1] , nums[i], nums[j] };
-					result.push_back(pr);
-			/*		sort(pr.begin(), pr.end());
+					for (int t = 0; t < l_it->second.size(); t++) {
 
-					ostringstream ostrStream;
-					ostrStream << pr[0] << ",";
-					ostrStream << pr[1] << ",";
-					ostrStream << pr[2] << ",";
-					ostrStream << pr[3];
-					 
-					if (ext.find(ostrStream.str()) == ext.end()) {
-						result.push_back(pr);
-						ext.insert(pair<string,bool>(ostrStream.str(),true));
-					}*/
+						if (l_it->second[t][0] != i && l_it->second[t][0] != j && l_it->second[t][1] != i && l_it->second[t][1] != j) {
+
+							vector<int> pr = { nums[l_it->second[t][0]],nums[l_it->second[t][1]] , nums[i], nums[j] };
+
+							sort(pr.begin(), pr.end());
+
+							ostringstream ostrStream;
+							ostrStream << pr[0] << ",";
+							ostrStream << pr[1] << ",";
+							ostrStream << pr[2] << ",";
+							ostrStream << pr[3];
+			
+							if (ext.find(ostrStream.str()) == ext.end()) {
+								result.push_back(pr);
+								ext.insert(pair<string, bool>(ostrStream.str(), true));
+							}
+						}
+					}
 				}
-				else {
 
-					l_it = hash.find(s);
-					if (l_it != hash.end()) {
-						hash[s].push_back({nums[i], nums[j]});
-					}
-					else
-					{
-						hash.insert(pair<int, vector<vector<int>>>(s, { {nums[i], nums[j]} }));
-					}
+				l_it = hash.find(s);
+				if (l_it != hash.end()) {
+					hash[s].push_back({ i,j });
+				}
+				else
+				{
+					hash.insert(pair<int, vector<vector<int>>>(s, { {i,j} }));
 				}
 			}
 		}
@@ -127,7 +131,7 @@ public:
 		for (int i = 0; i < length; i++) {
 			int j = i + 1;
 			int k = length - 1;
-	
+
 			if (i > 0 && nums[i] == nums[i - 1])
 				continue;
 			while (j < k) {
@@ -166,7 +170,7 @@ public:
 			int k = length - 1;
 			if (nums[i] > 0)
 				break;
-			if (i > 0 && nums[i] == nums[i - 1]) 
+			if (i > 0 && nums[i] == nums[i - 1])
 				continue;
 			while (j < k) {
 				int s = nums[i] + nums[j] + nums[k];
@@ -194,13 +198,15 @@ public:
 int main()
 {
 	vector<int> v = { 1, 0, -1, 0, -2, 2 };
-	vector<int> v1 = { 1, 0, -1, 0, -2, 2 };
-	vector<int> v2 = {1,1,1,1 };
-	
-	Solution so;
-	printVectorVectorInt(so.fourSum(v,0));
-	printVectorVectorInt(so.fourSum(v1, 0));
+	vector<int> v1 = { 0,2,2,2,10,-3,-9,2,-10,-4,-9,-2,2,8,7 };
+	vector<int> v2 = { 1,1,1,1 };
 
+	Solution so;
+	printVectorVectorInt(so.fourSum(v, 0));
+	printVectorVectorInt(so.fourSum(v1, 6));
+	// [[-10,-2,8,10],[-9,-3,8,10],[-9,-2,7,10],[-9,0,7,8],[-4,-2,2,10],[-4,0,2,8],[-3,0,2,7],[0,2,2,2]]
 	system("pause");
 	return 0;
 }
+
+
