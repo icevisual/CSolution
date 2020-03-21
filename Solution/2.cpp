@@ -24,7 +24,7 @@ bool KeyNotExistsAndSet(unordered_map<T, T1> &mp, T Key, T1 val) {
 	return false;
 }
 
-int main()
+int main22()
 {
 	char file[100] = {0};
 	string record[8];
