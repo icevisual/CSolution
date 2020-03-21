@@ -101,49 +101,97 @@ void printListNode(ListNode * node) {
 
 
 class Solution {
-public:
-	ListNode* reverseKGroup(ListNode* head, int k) {
-		if (k <= 1)
-			return head;
-		// 反转使用数组
-		vector<ListNode*> cache;
-		// 前置一个节点 指向 head
-		ListNode prehead(0);
-		prehead.next = head;
-		// 结果节点指针
-		ListNode * result = &prehead;
-		// 上阶段结束节点指针
-		ListNode * p0 = &prehead;
-		// 阶段开始指针
-		ListNode * p1 = head;
-		// 下一阶段开始指针
-		ListNode * p2 = head->next;
-		int i = k;
-		do {
-			i--;
-			cache.push_back(head);
-			if (i == 0) {
-				p2 = head->next;
-				head = p2;
-				// reverse
 
-				for (int j = k - 1; j >= 0; j--) {
-				
-					p0->next = cache[j];
-					p0 = p0 -> next;
-				}
-				p0->next = p2;
-				i = k;
-				cache.clear();
-			}
-			else
-				head = head->next;
-		} while (head != NULL);
-		return result->next;
+public:
+
+	int halfSearch(vector<long long> data, long long target,int start,int end) {
+	
+		if (start >= end)
+		{
+			if (target < data[start])
+				return start - 1;
+			return start;
+		}
+		int mid = int((start + end) / 2);
+
+		if (data[mid] == target)
+			return mid;
+		else if (data[mid] > target)
+			return halfSearch(data, target,start,mid - 1);
+		else 
+			return halfSearch(data, target, mid  + 1,end);
 	}
 
 
-public:
+	int divide(int dividend, int divisor) {
+		long dv = dividend;
+		long di = divisor;
+		int nag = 1;
+
+		if (-2147483647 - 1 == dv && di == -1)
+			return 2147483647;
+		if (-2147483647 - 1 == dv && di == 1)
+			return -2147483647 - 1;
+
+		if (dv < 0)
+		{
+			dv = -dv;
+			nag = -1;
+		}
+		if (di < 0)
+		{
+			di = -di;
+			nag *= -1;
+		}
+		if (dv < di)
+			return 0;
+
+		if (di == 1)
+			return nag * dv;
+
+		// sum
+		vector<long long> map;
+		// count
+		vector<int> idx;
+
+		long long i = 1;
+		long long v = di;
+		map.push_back(v);
+		idx.push_back(i);
+
+		while (v < dv) {
+		   //  * 2 改成 位移， 4ms => 0ms
+			v <<= 1;
+			i <<= 1;
+			map.push_back(v);
+			idx.push_back(i);
+		}
+		if (v == dv)
+			return nag * i;
+
+		int r = i / 2;
+		long long d = dv - v / 2;
+		int last_j = map.size() - 1;
+		while (d > 0) {
+			if (d < map[0])
+				break;
+
+			int id = halfSearch(map,d,0, last_j);
+			last_j = id;
+
+			if (map[id] == d)
+			{
+				r += idx[id];
+				d = 0;
+			}
+			else
+			{
+				r += idx[id];
+				d -= map[id];
+			}
+		}
+		return nag * r;
+	}
 
 
 	vector<vector<int>> fourSum(vector<int>& nums, int target) {
@@ -210,13 +258,53 @@ public:
 
 		return result;
 	}
+	
+	ListNode* reverseKGroup(ListNode* head, int k) {
+		if (k <= 1)
+			return head;
+		// 反转使用数组
+		vector<ListNode*> cache;
+		// 前置一个节点 指向 head
+		ListNode prehead(0);
+		prehead.next = head;
+		// 结果节点指针
+		ListNode * result = &prehead;
+		// 上阶段结束节点指针
+		ListNode * p0 = &prehead;
+		// 阶段开始指针
+		ListNode * p1 = head;
+		// 下一阶段开始指针
+		ListNode * p2 = head->next;
+		int i = k;
+		do {
+			i--;
+			cache.push_back(head);
+			if (i == 0) {
+				p2 = head->next;
+				head = p2;
+				// reverse
 
+				for (int j = k - 1; j >= 0; j--) {
 
+					p0->next = cache[j];
+					p0 = p0->next;
+				}
+				p0->next = p2;
+				i = k;
+				cache.clear();
+			}
+			else
+				head = head->next;
+		} while (head != NULL);
+		return result->next;
+	}
+	
 	vector<string>  c = { "",
 	"","abc","def",
 	"ghi","jkl","mno",
 	"pqrs","tuv","wxyz"
 	};
+	
 	vector<string> letterCombinations(string digits) {
 		vector<string> result;
 		int l = digits.length();
@@ -244,7 +332,7 @@ public:
 
 		return result;
 	}
-	
+
 	vector<int> twoSum(vector<int>& nums, int target) {
 		unordered_map<int, int> _map;
 		vector<int> rrr;
@@ -265,7 +353,6 @@ public:
 		}
 		return rrr;
 	}
-
 
 	int threeSumClosest(vector<int>& nums, int target) {
 
@@ -354,10 +441,17 @@ int main()
 	//printVectorVectorInt(so.fourSum(v1, 6));
 
 	auto l = fromArray({ 1,2,3,4,5,6,7,8,9,0 });
-	auto r = so.reverseKGroup(l,4);
 
-	printListNode(r);
-
+	cout << ((-2147483647 - 1) >> 1) << endl;
+	// 1100540749
+	// -1090366779
+	// cout << so.divide(-2147483647 - 1, -1) << " "  << endl;
+	
+	cout << so.divide(1100540749, -1090366779) << " " << int(ceil(1100540749 / -1090366779)) << endl;
+	cout << so.divide(2227, -2) << " " <<  int(ceil(2227/-2)) << endl;
+	cout << so.divide(123123, 123) << " " << int(ceil(123123 / 123)) << endl;
+	cout << so.divide(3343244, 56) << " " << int(ceil(3343244 / 56)) << endl;
+	cout << so.divide(2342, 444) << " " << int(ceil(2342 / 444)) << endl;
 
 	// printVectorString(so.letterCombinations("23"));
 	// [[-10,-2,8,10],[-9,-3,8,10],[-9,-2,7,10],[-9,0,7,8],[-4,-2,2,10],[-4,0,2,8],[-3,0,2,7],[0,2,2,2]]
