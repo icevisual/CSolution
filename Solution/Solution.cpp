@@ -109,12 +109,38 @@ void printListNode(ListNode * node) {
 	cout << endl;
 }
 
-
 class Solution {
 
 public:
 
+	//  1, 2, 3 → 1, 3, 2
+	//	3, 2, 1 → 1, 2, 3
+	//	2, 3, 1 → 3  1  2
+	//	1, 1, 5 → 1, 5, 1
+
+	void nextPermutation(vector<int>& nums) {
+
+	}
+
+	void backtrack(vector<string> &result,int n, string s, int left, int right) {
+		cout << ":"<<s << endl;
+		if (s.length() == 2 * n) {
+			result.push_back(s);
+			return;
+		}
+		if (left < n)
+			backtrack(result, n, s + "(", left + 1, right);
+		if (right < left)
+			backtrack(result, n, s + ")", left, right + 1);
+	}
+
 	vector<string> generateParenthesis(int n) {
+		vector<string> result;
+		backtrack(result,n,"",0,0);
+		return result;
+	}
+
+	vector<string> generateParenthesis0(int n) {
 		vector<string> result;
 
 		if (n == 0) {
@@ -160,8 +186,6 @@ public:
 		return result;
 	}
 
-
-
 	template <typename T>
 	int halfSearch(vector<T> data, T target,int start,int end) {
 	
@@ -180,7 +204,6 @@ public:
 		else 
 			return halfSearch(data, target, mid  + 1,end);
 	}
-
 
 	int divide(int dividend, int divisor) {
 		long dv = dividend;
@@ -488,7 +511,7 @@ public:
 };
 
 
-int main()
+int main0()
 {
 	vector<int> v = { 1, 0, -1, 0, -2, 2 };
 	vector<int> v1 = { 0,2,2,2,10,-3,-9,2,-10,-4,-9,-2,2,8,7 };
@@ -500,7 +523,7 @@ int main()
 
 	auto l = fromArray({ 1,2,3,4,5,6,7,8,9,0 });
 
-	printVectorString(so.generateParenthesis(4),true);
+	printVectorString(so.generateParenthesis(2),true);
 
 	// cout << ((-2147483647 - 1) >> 1) << endl;
 	// 1100540749

@@ -13,6 +13,9 @@
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
     </Filter>
+    <Filter Include="源文件\NiuKe">
+      <UniqueIdentifier>{243e9d46-a835-42d6-a682-9d26607f1ed7}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="pch.h">
@@ -25,6 +28,15 @@
     </ClCompile>
     <ClCompile Include="Solution.cpp">
       <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="Niuke.cpp">
+      <Filter>源文件\NiuKe</Filter>
+    </ClCompile>
+    <ClCompile Include="1.cpp">
+      <Filter>源文件\NiuKe</Filter>
+    </ClCompile>
+    <ClCompile Include="2.cpp">
+      <Filter>源文件\NiuKe</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>
