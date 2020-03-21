@@ -24,11 +24,25 @@ string vectorInt2String(vector<int> arr) {
 	return str;
 }
 
+string vectorString(vector<string> arr) {
+
+	string str = "[";
+
+	for (int i = 0; i < arr.size(); i++) {
+		str.append(arr[i]);
+		str.append(", ");
+	}
+	str.append("]");
+	return str;
+}
+
 void printVectorInt(vector<int> arr) {
 	std::cout << vectorInt2String(arr) << endl;
 }
 
-
+void printVectorString(vector<string> arr) {
+	std::cout << vectorString(arr) << endl;
+}
 void printVectorVectorInt(vector<vector<int>> arr) {
 	if (arr.size() == 0) {
 		std::cout << "[]" << endl;
@@ -40,9 +54,87 @@ void printVectorVectorInt(vector<vector<int>> arr) {
 	}
 	std::cout << "]" << endl;
 }
+struct ListNode {
+	int val;
+	ListNode *next;
+	ListNode(int x) : val(x), next(NULL) {}
+	
+};
 
 class Solution {
 public:
+	ListNode* reverseKGroup(ListNode* head, int k) {
+		return head;
+	}
+
+
+public:
+	vector<string>  c = { "",
+	"","abc","def",
+	"ghi","jkl","mno",
+	"pqrs","tuv","wxyz"
+	};
+	vector<string> letterCombinations(string digits) {
+		vector<string> result;
+		int l = digits.length();
+
+		if (l == 0)
+			return result;
+
+		if (l == 1) {
+			int n = digits.at(0) - '0';
+			for (int j = 0; j < c[n].length(); j++) {
+				result.push_back(string({ c[n][j] }));
+			}
+			return result;
+		}
+		vector<string> first = letterCombinations(digits.substr(0,1));
+		vector<string> rest = letterCombinations(digits.substr(1, l-1));
+
+		for (int i = 0; i < first.size(); i++)
+		{
+			for (int j = 0; j < rest.size(); j++)
+			{
+				result.push_back(first[i] + rest[j]);
+			}
+		}
+
+		return result;
+	}
+
+	vector<string> letterCombinations2(string digits) {
+		vector<string> result;
+		int c[] = {0,0,0,3,6,9,12,15,19,22,26,29};
+
+		int l = digits.length();
+
+		if (l == 1) {
+			int n = digits.at(0) - '0';
+			for (int j = c[n]; j < c[n + 1]; j++) {
+				result.push_back(string({ (char)(j + 'a')}));
+			}
+		}
+
+
+		for (int i = 2; i <= 9; i++)
+		{
+			for (int j = c[i]; j < c[i + 1]; j++) {
+				char t = j + 'a';
+				printf("%c ",t);
+			}
+			printf("\n");
+		}
+
+		for (int i = 0; i < digits.length(); i++)
+		{
+			int n = digits.at(i) - '0';
+
+
+
+		}
+
+		return result;
+	}
 
 	vector<vector<int>> fourSum(vector<int>& nums, int target) {
 		vector<vector<int>> result;
@@ -204,6 +296,9 @@ int main()
 	Solution so;
 	printVectorVectorInt(so.fourSum(v, 0));
 	printVectorVectorInt(so.fourSum(v1, 6));
+
+
+	printVectorString(so.letterCombinations("23"));
 	// [[-10,-2,8,10],[-9,-3,8,10],[-9,-2,7,10],[-9,0,7,8],[-4,-2,2,10],[-4,0,2,8],[-3,0,2,7],[0,2,2,2]]
 	system("pause");
 	return 0;
