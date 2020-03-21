@@ -54,21 +54,164 @@ void printVectorVectorInt(vector<vector<int>> arr) {
 	}
 	std::cout << "]" << endl;
 }
+
+template<typename T, typename T1>
+
+bool KeyNotExistsAndSet(unordered_map<T, T1> &mp,pair<T,T1> val) {
+	if (mp.find(val.first) == mp.end()) {
+		mp.insert(val);
+		return true;
+	}
+	return false;
+}
+
+
+
+
 struct ListNode {
 	int val;
 	ListNode *next;
 	ListNode(int x) : val(x), next(NULL) {}
-	
 };
+
+
+ListNode * fromArray(vector<int> arr) {
+	ListNode prehead(0);
+	ListNode *p = &prehead;
+	ListNode * result = &prehead;
+	for (int i = 0; i < arr.size(); i++) {
+		ListNode * t = new ListNode(arr[i]);
+		p->next = t;
+		p = p->next;
+	}
+	return result->next;
+}
+
+void printListNode(ListNode * node) {
+	if (!node)
+		return;
+	do
+	{
+		cout << node->val << "->";
+		node = node->next;
+	} while (node);
+
+	cout << endl;
+}
+
 
 class Solution {
 public:
 	ListNode* reverseKGroup(ListNode* head, int k) {
-		return head;
+		if (k <= 1)
+			return head;
+		// 反转使用数组
+		vector<ListNode*> cache;
+		// 前置一个节点 指向 head
+		ListNode prehead(0);
+		prehead.next = head;
+		// 结果节点指针
+		ListNode * result = &prehead;
+		// 上阶段结束节点指针
+		ListNode * p0 = &prehead;
+		// 阶段开始指针
+		ListNode * p1 = head;
+		// 下一阶段开始指针
+		ListNode * p2 = head->next;
+		int i = k;
+		do {
+			i--;
+			cache.push_back(head);
+			if (i == 0) {
+				p2 = head->next;
+				head = p2;
+				// reverse
+
+				for (int j = k - 1; j >= 0; j--) {
+				
+					p0->next = cache[j];
+					p0 = p0 -> next;
+				}
+				p0->next = p2;
+				i = k;
+				cache.clear();
+			}
+			else
+				head = head->next;
+		} while (head != NULL);
+		return result->next;
 	}
 
 
 public:
+
+
+	vector<vector<int>> fourSum(vector<int>& nums, int target) {
+		vector<vector<int>> result;
+		unordered_map<string, bool>  ext;
+		unordered_map<int, vector<vector<int>>> hash;
+		unordered_map<int, vector<vector<int>>>::iterator l_it;
+		
+		sort(nums.begin(), nums.end());
+
+		for (int i = 0; i < nums.size(); i++) {
+
+			for (int j = i + 1; j < nums.size(); j++) {
+
+				int s = nums[i] + nums[j];
+
+				l_it = hash.find(target - s);
+				if (l_it != hash.end())
+				{
+					for (int t = 0; t < l_it->second.size(); t++) {
+
+						if (l_it->second[t][0] != i && l_it->second[t][0] != j && l_it->second[t][1] != i && l_it->second[t][1] != j) {
+
+							vector<int> pr = { nums[l_it->second[t][0]],nums[l_it->second[t][1]] , nums[i], nums[j] };
+
+							sort(pr.begin(), pr.end());
+
+							
+							ostringstream ostrStream;
+							ostrStream << pr[0] << ",";
+							ostrStream << pr[1] << ",";
+							ostrStream << pr[2] << ",";
+							ostrStream << pr[3];
+
+							if (KeyNotExistsAndSet(ext, pair<string, bool>(ostrStream.str(), true))) {
+								result.push_back(pr);
+							}
+						}
+					}
+				}
+
+				l_it = hash.find(s);
+				if (l_it != hash.end()) {
+					ostringstream ostrStream;
+
+					if (nums[i] > nums[j]) {
+						ostrStream << nums[j] << "," << nums[i];
+					}
+					else {
+						ostrStream << nums[i] << "," << nums[j];
+					}
+
+					if (KeyNotExistsAndSet(ext, pair<string, bool>(ostrStream.str(), true))) {
+						hash[s].push_back({ i,j });
+					}
+				}
+				else
+				{
+					hash.insert(pair<int, vector<vector<int>>>(s, { {i,j} }));
+				}
+			}
+		}
+
+
+		return result;
+	}
+
+
 	vector<string>  c = { "",
 	"","abc","def",
 	"ghi","jkl","mno",
@@ -101,94 +244,7 @@ public:
 
 		return result;
 	}
-
-	vector<string> letterCombinations2(string digits) {
-		vector<string> result;
-		int c[] = {0,0,0,3,6,9,12,15,19,22,26,29};
-
-		int l = digits.length();
-
-		if (l == 1) {
-			int n = digits.at(0) - '0';
-			for (int j = c[n]; j < c[n + 1]; j++) {
-				result.push_back(string({ (char)(j + 'a')}));
-			}
-		}
-
-
-		for (int i = 2; i <= 9; i++)
-		{
-			for (int j = c[i]; j < c[i + 1]; j++) {
-				char t = j + 'a';
-				printf("%c ",t);
-			}
-			printf("\n");
-		}
-
-		for (int i = 0; i < digits.length(); i++)
-		{
-			int n = digits.at(i) - '0';
-
-
-
-		}
-
-		return result;
-	}
-
-	vector<vector<int>> fourSum(vector<int>& nums, int target) {
-		vector<vector<int>> result;
-		unordered_map<string, bool>  ext;
-		unordered_map<int, vector<vector<int>>> hash;
-		unordered_map<int, vector<vector<int>>>::iterator l_it;
-
-		sort(nums.begin(), nums.end());
-
-		for (int i = 0; i < nums.size(); i++) {
-
-			for (int j = i + 1; j < nums.size(); j++) {
-
-				int s = nums[i] + nums[j];
-
-				l_it = hash.find(target - s);
-				if (l_it != hash.end())
-				{
-					for (int t = 0; t < l_it->second.size(); t++) {
-
-						if (l_it->second[t][0] != i && l_it->second[t][0] != j && l_it->second[t][1] != i && l_it->second[t][1] != j) {
-
-							vector<int> pr = { nums[l_it->second[t][0]],nums[l_it->second[t][1]] , nums[i], nums[j] };
-
-							sort(pr.begin(), pr.end());
-
-							ostringstream ostrStream;
-							ostrStream << pr[0] << ",";
-							ostrStream << pr[1] << ",";
-							ostrStream << pr[2] << ",";
-							ostrStream << pr[3];
-			
-							if (ext.find(ostrStream.str()) == ext.end()) {
-								result.push_back(pr);
-								ext.insert(pair<string, bool>(ostrStream.str(), true));
-							}
-						}
-					}
-				}
-
-				l_it = hash.find(s);
-				if (l_it != hash.end()) {
-					hash[s].push_back({ i,j });
-				}
-				else
-				{
-					hash.insert(pair<int, vector<vector<int>>>(s, { {i,j} }));
-				}
-			}
-		}
-
-
-		return result;
-	}
+	
 	vector<int> twoSum(vector<int>& nums, int target) {
 		unordered_map<int, int> _map;
 		vector<int> rrr;
@@ -294,11 +350,16 @@ int main()
 	vector<int> v2 = { 1,1,1,1 };
 
 	Solution so;
-	printVectorVectorInt(so.fourSum(v, 0));
-	printVectorVectorInt(so.fourSum(v1, 6));
+	//printVectorVectorInt(so.fourSum(v, 0));
+	//printVectorVectorInt(so.fourSum(v1, 6));
+
+	auto l = fromArray({ 1,2,3,4,5,6,7,8,9,0 });
+	auto r = so.reverseKGroup(l,4);
+
+	printListNode(r);
 
 
-	printVectorString(so.letterCombinations("23"));
+	// printVectorString(so.letterCombinations("23"));
 	// [[-10,-2,8,10],[-9,-3,8,10],[-9,-2,7,10],[-9,0,7,8],[-4,-2,2,10],[-4,0,2,8],[-3,0,2,7],[0,2,2,2]]
 	system("pause");
 	return 0;
