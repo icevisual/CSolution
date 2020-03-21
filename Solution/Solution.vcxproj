@@ -157,6 +157,9 @@
     <ClCompile Include="1.cpp" />
     <ClCompile Include="2.cpp" />
     <ClCompile Include="3.cpp" />
+    <ClCompile Include="4.cpp" />
+    <ClCompile Include="5.cpp" />
+    <ClCompile Include="6.cpp" />
     <ClCompile Include="Niuke.cpp" />
     <ClCompile Include="pch.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
