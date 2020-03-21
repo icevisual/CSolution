@@ -5,6 +5,8 @@
 #include "string.h"
 #include "math.h"
 #include "stdlib.h"
+
+
 #include <sstream>
 #include <algorithm>
 #include <iostream>
@@ -24,43 +26,48 @@ bool KeyNotExistsAndSet(unordered_map<T, T1> &mp, T Key, T1 val) {
 
 int main()
 {
-
 	char file[100] = {0};
-	int line = 0;
-	
+	string record[8];
+	int i = 0;
 	unordered_map<string, int> hash;
 
-	while (~scanf_s("%s%d", file,100, &line)) {
+	while (~scanf_s("%[^\n]%*c", file,100)) {
 	
-		printf("%s %d\n",file,line);
 		if (file[0] == '.')
 			break;
-		
-		ostringstream os;
-		os << string(file) << " " << line;
-		if (!KeyNotExistsAndSet(hash, os.str(), 1)) {
-			hash[os.str()] ++;
-		}
-
-	}
-
-	unordered_map<string, int>::iterator it = hash.begin();
-	while (it != hash.end()) {
-
-		int k = it->first.length();
-
-		while (k >= 0 && it->first[k] != ' ') {
-			k--;
-		}
+		int l = strlen(file);
+		int k = l -  1;
+		while (k >= 0 && file[k] == ' ') k--;
+		while (k >= 0 && file[k] != ' ') k--;
 		int c = 0;
-		while (c < 16 && k >= 0 && it->first[k] != '\\') {
+		while (c <= 16 && k >= 0 && file[k] != '\\'&& file[k] != '/') {
 			k--;
 			c++;
 		}
-
-		cout << it->first.substr(k + 1, it->first.length() - k - 1) << " " << it->second << endl;
-		it++;
+		string str(file, k + 1,l);
+		if (!KeyNotExistsAndSet(hash, str, 1)) {
+			hash[str] ++;
+		}
+		else
+		{
+			record[i % 8] = str;
+			i++;
+		}
+		
 	}
+
+	if (i < 8) {
+		for (int t = 0; t < i; t++) {
+			cout << record[t] << " " <<hash[record[t]] << endl;
+		}
+	}
+	else {
+		
+		for (int t = i ; t < i  + 8; t++) {
+			cout << record[t % 8] << " " << hash[record[t % 8]] << endl;
+		}
+	}
+	
 
 	system("pause");
 	return 0;
