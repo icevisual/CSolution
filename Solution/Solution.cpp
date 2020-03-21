@@ -24,13 +24,16 @@ string vectorInt2String(vector<int> arr) {
 	return str;
 }
 
-string vectorString(vector<string> arr) {
+string vectorString(vector<string> arr,bool vertical = false) {
 
 	string str = "[";
-
+	if (vertical)
+		str.append("\n");
 	for (int i = 0; i < arr.size(); i++) {
 		str.append(arr[i]);
 		str.append(", ");
+		if (vertical)
+			str.append("\n");
 	}
 	str.append("]");
 	return str;
@@ -40,8 +43,8 @@ void printVectorInt(vector<int> arr) {
 	std::cout << vectorInt2String(arr) << endl;
 }
 
-void printVectorString(vector<string> arr) {
-	std::cout << vectorString(arr) << endl;
+void printVectorString(vector<string> arr, bool vertical = false) {
+	std::cout << vectorString(arr, vertical) << endl;
 }
 void printVectorVectorInt(vector<vector<int>> arr) {
 	if (arr.size() == 0) {
@@ -65,7 +68,14 @@ bool KeyNotExistsAndSet(unordered_map<T, T1> &mp,pair<T,T1> val) {
 	return false;
 }
 
-
+template<typename T, typename T1>
+bool KeyNotExistsAndSet(unordered_map<T, T1> &mp, T Key,T1 val) {
+	if (mp.find(Key) == mp.end()) {
+		mp.insert(pair<T,T1>(Key,val));
+		return true;
+	}
+	return false;
+}
 
 
 struct ListNode {
@@ -104,7 +114,56 @@ class Solution {
 
 public:
 
-	int halfSearch(vector<long long> data, long long target,int start,int end) {
+	vector<string> generateParenthesis(int n) {
+		vector<string> result;
+
+		if (n == 0) {
+			return result;
+		}
+		if (n == 1) {
+			result.push_back("()");
+		}
+		else if (n == 2) {
+			result.push_back("(())");
+			result.push_back("()()");
+		}
+		else {
+		
+			unordered_map <string, bool> hash;
+
+			vector<string> r = generateParenthesis(n-1);
+
+			for (int i = 0; i < r.size(); i++) {
+				string f = "(" + r[i] + ")";
+				if (KeyNotExistsAndSet(hash, f, true)) {
+					result.push_back(f);
+				}
+				f = "()" + r[i];
+				if (KeyNotExistsAndSet(hash, f, true)) {
+					result.push_back(f);
+				}
+				f =  r[i] + "()";
+				if (KeyNotExistsAndSet(hash, f, true)) {
+					result.push_back(f);
+				}
+
+				for (int j = 1; j < r[i].length(); j++) {
+					f = r[i].substr(0,j) + "()" + r[i].substr(j, r[i].length() - j);
+					if (KeyNotExistsAndSet(hash, f, true)) {
+						result.push_back(f);
+					}
+				}
+
+			}
+		}
+
+		return result;
+	}
+
+
+
+	template <typename T>
+	int halfSearch(vector<T> data, T target,int start,int end) {
 	
 		if (start >= end)
 		{
@@ -192,7 +251,6 @@ public:
 		}
 		return nag * r;
 	}
-
 
 	vector<vector<int>> fourSum(vector<int>& nums, int target) {
 		vector<vector<int>> result;
@@ -442,16 +500,18 @@ int main()
 
 	auto l = fromArray({ 1,2,3,4,5,6,7,8,9,0 });
 
-	cout << ((-2147483647 - 1) >> 1) << endl;
+	printVectorString(so.generateParenthesis(4),true);
+
+	// cout << ((-2147483647 - 1) >> 1) << endl;
 	// 1100540749
 	// -1090366779
 	// cout << so.divide(-2147483647 - 1, -1) << " "  << endl;
 	
-	cout << so.divide(1100540749, -1090366779) << " " << int(ceil(1100540749 / -1090366779)) << endl;
-	cout << so.divide(2227, -2) << " " <<  int(ceil(2227/-2)) << endl;
-	cout << so.divide(123123, 123) << " " << int(ceil(123123 / 123)) << endl;
-	cout << so.divide(3343244, 56) << " " << int(ceil(3343244 / 56)) << endl;
-	cout << so.divide(2342, 444) << " " << int(ceil(2342 / 444)) << endl;
+	//cout << so.divide(1100540749, -1090366779) << " " << int(ceil(1100540749 / -1090366779)) << endl;
+	//cout << so.divide(2227, -2) << " " <<  int(ceil(2227/-2)) << endl;
+	//cout << so.divide(123123, 123) << " " << int(ceil(123123 / 123)) << endl;
+	//cout << so.divide(3343244, 56) << " " << int(ceil(3343244 / 56)) << endl;
+	//cout << so.divide(2342, 444) << " " << int(ceil(2342 / 444)) << endl;
 
 	// printVectorString(so.letterCombinations("23"));
 	// [[-10,-2,8,10],[-9,-3,8,10],[-9,-2,7,10],[-9,0,7,8],[-4,-2,2,10],[-4,0,2,8],[-3,0,2,7],[0,2,2,2]]
