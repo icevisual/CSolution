@@ -39,14 +39,10 @@ string vectorString(vector<string> arr, bool vertical = false) {
 	return str;
 }
 
-void printVectorInt(vector<int> arr) {
+void printVector(vector<int> arr) {
 	std::cout << vectorInt2String(arr) << endl;
 }
-
-void printVectorString(vector<string> arr, bool vertical = false) {
-	std::cout << vectorString(arr, vertical) << endl;
-}
-void printVectorVectorInt(vector<vector<int>> arr) {
+void printVector(vector<vector<int>> arr) {
 	if (arr.size() == 0) {
 		std::cout << "[]" << endl;
 		return;
@@ -57,6 +53,10 @@ void printVectorVectorInt(vector<vector<int>> arr) {
 	}
 	std::cout << "]" << endl;
 }
+void printVector(vector<string> arr, bool vertical = false) {
+	std::cout << vectorString(arr, vertical) << endl;
+}
+
 
 template<typename T, typename T1>
 
@@ -109,11 +109,44 @@ void printListNode(ListNode * node) {
 	cout << endl;
 }
 
+
+
+bool cmp_vector_int(vector<int> a, vector<int> b)
+{
+	return a[0] < b[0];
+}
+
+
 class Solution {
 
 public:
-	
+	void combinationSumR(vector<int>& candidates, int target,int start_idx) {
+		vector<int> result;
+		int t = target;
+		for (int i = start_idx; i >= 0; i--)
+		{
+			while (candidates[i] <= target) {
+				result.push_back(candidates[i]);
+				
+				target -= candidates[i];
+			}
+		}
 
+		printVector(result);
+
+
+		if (start_idx != 0)
+			combinationSumR(candidates, t, start_idx - 1);
+
+	}
+
+	vector<vector<int>> combinationSum(vector<int>& candidates, int target) {
+		vector<vector<int>> result;
+		sort(candidates.begin(), candidates.end());
+
+		combinationSumR(candidates,target, candidates.size() - 1);
+		return result;
+	}
 
 	bool isValidSudoku(vector<vector<char>>& board) {
 
@@ -165,7 +198,7 @@ public:
 			{
 				if (board[i][j] == '.') {
 					printf("(%d, %d) ",i,j);
-					printVectorInt(vector<int>(flags[i][j] + 1, flags[i][j] + 10));
+					printVector(vector<int>(flags[i][j] + 1, flags[i][j] + 10));
 				}
 			}
 		}
@@ -222,15 +255,31 @@ public:
 	}
 
 
-	void combinationSumR(vector<int>& candidates, int target) {
 
+	vector<vector<int>> merge(vector<vector<int>>& intervals) {
 
-
-	}
-
-	vector<vector<int>> combinationSum(vector<int>& candidates, int target) {
 		vector<vector<int>> result;
-		sort(candidates.begin(), candidates.end());
+
+		int len = intervals.size();
+		if (len == 0)
+			return result;
+
+		sort(intervals.begin(), intervals.end(), cmp_vector_int);
+
+		result.push_back(intervals[0]);
+		int idx = 0;
+		for (int i = 1; i < len; i++)
+		{
+			if (intervals[i][0] <= result[idx][1]) {
+				result[idx][1] = max(intervals[i][1], result[idx][1]);
+			}
+			else
+			{
+				result.push_back(intervals[i]);
+				idx++;
+			}
+		}
+
 
 		return result;
 	}
@@ -688,13 +737,10 @@ int main()
 		{ 9,10,11,12 },
 		{ 13,14,15,16 }
 	};
-	vector<vector<int>> mtx23 = {
-		{1,},
-		{ 5,  },
-		{ 9,},
-		{ 9,},
-	};
+	vector<vector<int>> mtx23 = { {2,6},{8,10},{15,18} ,{1,3}, };
 
+	vector<vector<int>> mtx231 = { {1,4},{2,3} };
+	//{{1,4},{4,5}}
 	vector<vector<char>> mtx2 = {
 	  {'5','3','.','.','7','.','.','.','.'},
 	  {'6','.','.','1','9','5','.','.','.'},
@@ -707,7 +753,15 @@ int main()
 	  {'.','.','.','.','8','.','.','7','9'}
 	};
 	//so.isValidSudoku(mtx2);
-	printVectorInt(so.spiralOrder(mtx23));
+	//printVectorInt(so.spiralOrder(mtx23));
+
+	vector<int> arr000 = { 2,3,6,7 };
+
+	printVector(so.combinationSum(arr000, 7));
+
+	//printVector(so.merge(mtx231));
+
+	//merge
 
 	//
 	//vector<vector<int>> mtx1 = {
