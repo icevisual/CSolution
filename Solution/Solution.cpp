@@ -24,7 +24,7 @@ string vectorInt2String(vector<int> arr) {
 	return str;
 }
 
-string vectorString(vector<string> arr,bool vertical = false) {
+string vectorString(vector<string> arr, bool vertical = false) {
 
 	string str = "[";
 	if (vertical)
@@ -60,7 +60,7 @@ void printVectorVectorInt(vector<vector<int>> arr) {
 
 template<typename T, typename T1>
 
-bool KeyNotExistsAndSet(unordered_map<T, T1> &mp,pair<T,T1> val) {
+bool KeyNotExistsAndSet(unordered_map<T, T1> &mp, pair<T, T1> val) {
 	if (mp.find(val.first) == mp.end()) {
 		mp.insert(val);
 		return true;
@@ -69,9 +69,9 @@ bool KeyNotExistsAndSet(unordered_map<T, T1> &mp,pair<T,T1> val) {
 }
 
 template<typename T, typename T1>
-bool KeyNotExistsAndSet(unordered_map<T, T1> &mp, T Key,T1 val) {
+bool KeyNotExistsAndSet(unordered_map<T, T1> &mp, T Key, T1 val) {
 	if (mp.find(Key) == mp.end()) {
-		mp.insert(pair<T,T1>(Key,val));
+		mp.insert(pair<T, T1>(Key, val));
 		return true;
 	}
 	return false;
@@ -112,6 +112,105 @@ void printListNode(ListNode * node) {
 class Solution {
 
 public:
+	
+
+
+	bool isValidSudoku(vector<vector<char>>& board) {
+
+		int flags[10][10][10] = {0};
+
+		for (int i = 0; i < 9; i++)
+		{
+			for (int j = 0; j < 9; j++)
+			{
+				if (board[i][j] == '.') {
+					for (int k = 0; k < 9; k++)
+					{
+						if (board[i][k] != '.')
+						{
+							flags[i][j][board[i][k] - '0'] = 1;
+						}
+
+						if (board[k][j] != '.')
+						{
+							flags[i][j][board[k][j] - '0'] = 1;
+						}
+					}
+
+					int m0i = (int)(i / 3);
+					int m0j = (int)(j / 3);
+
+					for (int ti = m0i * 3; ti < m0i * 3 + 3;ti ++)
+					{
+
+						for (int tj = m0j * 3; tj < m0j * 3 + 3; tj++)
+						{
+							if (board[ti][tj] != '.')
+							{
+								flags[i][j][board[ti][tj] - '0'] = 1;
+							}
+						}
+					}
+
+				}
+		
+			}
+
+
+		}
+
+		for (int i = 0; i < 9; i++)
+		{
+			for (int j = 0; j < 9; j++)
+			{
+				if (board[i][j] == '.') {
+					printf("(%d, %d) ",i,j);
+					printVectorInt(vector<int>(flags[i][j] + 1, flags[i][j] + 10));
+				}
+			}
+		}
+
+		//printVectorInt(vector<int>(flags[0][2], flags[0][2] + 10));
+		//printVectorInt(vector<int>(flags[1][1], flags[1][1] + 10));
+		//printVectorInt(vector<int>(flags[1][2], flags[1][2] + 10));
+		//printVectorInt(vector<int>(flags[2][0], flags[2][0] + 10));
+
+
+		return false;
+	}
+
+	void rotate(vector<vector<int>>& matrix) {
+
+		int n = matrix.size();
+		//printVectorVectorInt(matrix);
+
+		for (int i = 1; i < n; i++)
+		{
+			for (int j = 0; j < i; j++)
+			{
+				int t = matrix[i][j];
+				matrix[i][j] = matrix[j][i];
+				matrix[j][i] = t;
+			}
+		}
+
+		//printVectorVectorInt(matrix);
+
+		int hn = (int)(n / 2);
+		for (int i = 0; i < n; i++)
+		{
+			for (int j = 0; j < hn; j++)
+			{
+				int t = matrix[i][j];
+				matrix[i][j] = matrix[i][n - j - 1];
+				matrix[i][n - j - 1] = t;
+			}
+		}
+
+
+		//printVectorVectorInt(matrix);
+
+	}
 
 	//  1, 2, 3 → 1, 3, 2
 	//	3, 2, 1 → 1, 2, 3
@@ -122,8 +221,64 @@ public:
 
 	}
 
-	void backtrack(vector<string> &result,int n, string s, int left, int right) {
-		cout << ":"<<s << endl;
+
+	void combinationSumR(vector<int>& candidates, int target) {
+
+
+
+	}
+
+	vector<vector<int>> combinationSum(vector<int>& candidates, int target) {
+		vector<vector<int>> result;
+		sort(candidates.begin(), candidates.end());
+
+		return result;
+	}
+
+
+	vector<int> spiralOrder(vector<vector<int>>& matrix) {
+
+		vector<int> result;
+
+		// 空输入
+		// 典型输入，这里是 只有一行，只有一束
+
+		int m = matrix.size();
+
+		if (m == 0)
+			return result;
+		int n = matrix[0].size();
+		int start_x = 0;
+		while (n > 0 && m > 0) {
+
+			for (int i = start_x; i < start_x + n; i++)
+			{
+				result.push_back(matrix[start_x][i]);
+			}
+			for (int i = start_x + 1; i < start_x + m; i++)
+			{
+				result.push_back(matrix[i][start_x + n - 1]);
+			}
+			for (int i = start_x + n - 2; i >= start_x && m > 1; i--)
+			{
+				result.push_back(matrix[start_x + m - 1][i]);
+			}
+			for (int i = start_x + m - 2; i > start_x && n > 1; i--)
+			{
+				result.push_back(matrix[i][start_x]);
+			}
+
+			m -= 2;
+			n -= 2;
+			start_x += 1;
+		}
+
+		return result;
+
+	}
+
+	void backtrack(vector<string> &result, int n, string s, int left, int right) {
+		cout << ":" << s << endl;
 		if (s.length() == 2 * n) {
 			result.push_back(s);
 			return;
@@ -136,7 +291,7 @@ public:
 
 	vector<string> generateParenthesis(int n) {
 		vector<string> result;
-		backtrack(result,n,"",0,0);
+		backtrack(result, n, "", 0, 0);
 		return result;
 	}
 
@@ -154,10 +309,10 @@ public:
 			result.push_back("()()");
 		}
 		else {
-		
+
 			unordered_map <string, bool> hash;
 
-			vector<string> r = generateParenthesis(n-1);
+			vector<string> r = generateParenthesis(n - 1);
 
 			for (int i = 0; i < r.size(); i++) {
 				string f = "(" + r[i] + ")";
@@ -168,13 +323,13 @@ public:
 				if (KeyNotExistsAndSet(hash, f, true)) {
 					result.push_back(f);
 				}
-				f =  r[i] + "()";
+				f = r[i] + "()";
 				if (KeyNotExistsAndSet(hash, f, true)) {
 					result.push_back(f);
 				}
 
 				for (int j = 1; j < r[i].length(); j++) {
-					f = r[i].substr(0,j) + "()" + r[i].substr(j, r[i].length() - j);
+					f = r[i].substr(0, j) + "()" + r[i].substr(j, r[i].length() - j);
 					if (KeyNotExistsAndSet(hash, f, true)) {
 						result.push_back(f);
 					}
@@ -187,8 +342,8 @@ public:
 	}
 
 	template <typename T>
-	int halfSearch(vector<T> data, T target,int start,int end) {
-	
+	int halfSearch(vector<T> data, T target, int start, int end) {
+
 		if (start >= end)
 		{
 			if (target < data[start])
@@ -200,9 +355,9 @@ public:
 		if (data[mid] == target)
 			return mid;
 		else if (data[mid] > target)
-			return halfSearch(data, target,start,mid - 1);
-		else 
-			return halfSearch(data, target, mid  + 1,end);
+			return halfSearch(data, target, start, mid - 1);
+		else
+			return halfSearch(data, target, mid + 1, end);
 	}
 
 	int divide(int dividend, int divisor) {
@@ -242,7 +397,7 @@ public:
 		idx.push_back(i);
 
 		while (v < dv) {
-		   //  * 2 改成 位移， 4ms => 0ms
+			//  * 2 改成 位移， 4ms => 0ms
 			v <<= 1;
 			i <<= 1;
 			map.push_back(v);
@@ -258,7 +413,7 @@ public:
 			if (d < map[0])
 				break;
 
-			int id = halfSearch(map,d,0, last_j);
+			int id = halfSearch(map, d, 0, last_j);
 			last_j = id;
 
 			if (map[id] == d)
@@ -280,7 +435,7 @@ public:
 		unordered_map<string, bool>  ext;
 		unordered_map<int, vector<vector<int>>> hash;
 		unordered_map<int, vector<vector<int>>>::iterator l_it;
-		
+
 		sort(nums.begin(), nums.end());
 
 		for (int i = 0; i < nums.size(); i++) {
@@ -300,7 +455,7 @@ public:
 
 							sort(pr.begin(), pr.end());
 
-							
+
 							ostringstream ostrStream;
 							ostrStream << pr[0] << ",";
 							ostrStream << pr[1] << ",";
@@ -339,7 +494,7 @@ public:
 
 		return result;
 	}
-	
+
 	ListNode* reverseKGroup(ListNode* head, int k) {
 		if (k <= 1)
 			return head;
@@ -379,13 +534,13 @@ public:
 		} while (head != NULL);
 		return result->next;
 	}
-	
+
 	vector<string>  c = { "",
 	"","abc","def",
 	"ghi","jkl","mno",
 	"pqrs","tuv","wxyz"
 	};
-	
+
 	vector<string> letterCombinations(string digits) {
 		vector<string> result;
 		int l = digits.length();
@@ -400,8 +555,8 @@ public:
 			}
 			return result;
 		}
-		vector<string> first = letterCombinations(digits.substr(0,1));
-		vector<string> rest = letterCombinations(digits.substr(1, l-1));
+		vector<string> first = letterCombinations(digits.substr(0, 1));
+		vector<string> rest = letterCombinations(digits.substr(1, l - 1));
 
 		for (int i = 0; i < first.size(); i++)
 		{
@@ -510,26 +665,72 @@ public:
 	}
 };
 
+// Ctrl + M,Ctrl + A 全部折叠
+// Ctrl + M,Ctrl + X 全部展开
 
-int main0()
+int main()
 {
 	vector<int> v = { 1, 0, -1, 0, -2, 2 };
 	vector<int> v1 = { 0,2,2,2,10,-3,-9,2,-10,-4,-9,-2,2,8,7 };
 	vector<int> v2 = { 1,1,1,1 };
 
 	Solution so;
+
+	vector<vector<int>> mtx = {
+		{1,2,3},
+		{4,5,6},
+		{7,8,9}
+	};
+
+	vector<vector<int>> mtx3 = {
+		{1, 2, 3, 4},
+		{ 5, 6, 7, 8 },
+		{ 9,10,11,12 },
+		{ 13,14,15,16 }
+	};
+	vector<vector<int>> mtx23 = {
+		{1,},
+		{ 5,  },
+		{ 9,},
+		{ 9,},
+	};
+
+	vector<vector<char>> mtx2 = {
+	  {'5','3','.','.','7','.','.','.','.'},
+	  {'6','.','.','1','9','5','.','.','.'},
+	  {'.','9','8','.','.','.','.','6','.'},
+	  {'8','.','.','.','6','.','.','.','3'},
+	  {'4','.','.','8','.','3','.','.','1'},
+	  {'7','.','.','.','2','.','.','.','6'},
+	  {'.','6','.','.','.','.','2','8','.'},
+	  {'.','.','.','4','1','9','.','.','5'},
+	  {'.','.','.','.','8','.','.','7','9'}
+	};
+	//so.isValidSudoku(mtx2);
+	printVectorInt(so.spiralOrder(mtx23));
+
+	//
+	//vector<vector<int>> mtx1 = {
+	//  { 5, 1, 9,11},
+	//  { 2, 4, 8,10},
+	//  {13, 3, 6, 7},
+	//  {15,14,12,16}
+	//};
+
+	//so.rotate(mtx1);
+
 	//printVectorVectorInt(so.fourSum(v, 0));
 	//printVectorVectorInt(so.fourSum(v1, 6));
 
-	auto l = fromArray({ 1,2,3,4,5,6,7,8,9,0 });
+	//auto l = fromArray({ 1,2,3,4,5,6,7,8,9,0 });
 
-	printVectorString(so.generateParenthesis(2),true);
+	//printVectorString(so.generateParenthesis(2), true);
 
 	// cout << ((-2147483647 - 1) >> 1) << endl;
 	// 1100540749
 	// -1090366779
 	// cout << so.divide(-2147483647 - 1, -1) << " "  << endl;
-	
+
 	//cout << so.divide(1100540749, -1090366779) << " " << int(ceil(1100540749 / -1090366779)) << endl;
 	//cout << so.divide(2227, -2) << " " <<  int(ceil(2227/-2)) << endl;
 	//cout << so.divide(123123, 123) << " " << int(ceil(123123 / 123)) << endl;

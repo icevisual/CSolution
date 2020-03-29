@@ -50,5 +50,17 @@
     <ClCompile Include="6.cpp">
       <Filter>源文件\NiuKe</Filter>
     </ClCompile>
+    <ClCompile Include="7.cpp">
+      <Filter>源文件\NiuKe</Filter>
+    </ClCompile>
+    <ClCompile Include="8.cpp">
+      <Filter>源文件\NiuKe</Filter>
+    </ClCompile>
+    <ClCompile Include="9.cpp">
+      <Filter>源文件\NiuKe</Filter>
+    </ClCompile>
+    <ClCompile Include="10.cpp">
+      <Filter>源文件\NiuKe</Filter>
+    </ClCompile>
   </ItemGroup>
 </Project>

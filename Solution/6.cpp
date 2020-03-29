@@ -6,7 +6,7 @@
 #include "math.h"
 #include "stdlib.h"
 
-int main()
+int main666()
 {
 	char str[100];
 	while (scanf_s("%s", str,100) != EOF) {
