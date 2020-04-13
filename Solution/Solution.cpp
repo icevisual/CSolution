@@ -117,9 +117,166 @@ bool cmp_vector_int(vector<int> a, vector<int> b)
 }
 
 
+class Reg {
+
+public:
+	string str;
+	int min_count = 0;
+	bool repeatable = false;
+};
+
 class Solution {
 
 public:
+
+	string getPermutation(int n, int k) {
+		vector<int> flag(n + 1);
+		for (int i = 0; i <= n; i++)
+			flag[i] = 1;
+
+		vector<int> je;
+		je.push_back(1);
+		je.push_back(1);
+		je.push_back(2);
+		for (int i = 3; i < n; i++)
+		{
+			je.push_back(je[i - 1] * i);
+		}
+
+		int kn = je[n - 1];
+
+		ostringstream os;
+		// 确认是第几个数，从标记数组取
+		// 
+
+		for (int i = 0; i < n; i++)
+		{
+			kn = je[n - i - 1];
+			int c = (int)ceil(k * 1.0 / kn);
+			int t = c;
+			for (int i = 1; i <= n; i++)
+			{
+				if (flag[i] == 1)
+				{
+					c--;
+					if (c <= 0)
+					{
+						os << i;
+						flag[i] = 0;
+						break;
+					}
+				}
+			}
+			k = k - kn * (t - 1);
+
+		}
+
+
+		return os.str();
+	}
+
+
+
+	vector<vector<int>> generateMatrix(int n) {
+
+
+		vector<vector<int>> result(n);
+
+		for (int i = 0; i < n; i++)
+			result[i] = vector<int>(n);
+		// 空输入
+		// 典型输入，这里是 只有一行，只有一束
+
+		int m = n;
+
+		if (m == 0)
+			return result;
+		int start_x = 0;
+		int t = 1;
+		while (n > 0 && m > 0) {
+
+			for (int i = start_x; i < start_x + n; i++)
+			{
+				result[start_x][i] = t++;
+			}
+			for (int i = start_x + 1; i < start_x + m; i++)
+			{
+				result[i][start_x + n - 1] = t++;
+			}
+			for (int i = start_x + n - 2; i >= start_x && m > 1; i--)
+			{
+				result[start_x + m - 1][i] = t++;
+			}
+			for (int i = start_x + m - 2; i > start_x && n > 1; i--)
+			{
+				result[i][start_x] = t++;
+			}
+
+			m -= 2;
+			n -= 2;
+			start_x += 1;
+		}
+
+		return result;
+
+		
+	}
+
+	int halfSearch2(vector<vector<int>> data, int target, int start, int end) {
+
+		if (start >= end)
+		{
+			if (target < data[start][0])
+				return start - 1;
+			return start;
+		}
+		int mid = int((start + end) / 2);
+
+		if (data[mid][0] >= target && data[mid][1] <= target)
+			return mid;
+		else if (data[mid][0] > target)
+			return halfSearch2(data, target, start, mid - 1);
+		else
+			return halfSearch2(data, target, mid + 1, end);
+	}
+
+	vector<vector<int>> insert(vector<vector<int>>& intervals, vector<int>& newInterval) {
+		vector<vector<int>> result;
+
+		
+
+
+		return result;
+	}
+
+
+
+
+	bool isMatch(string s, string p) {
+
+		vector<Reg> lst;
+		int len = p.length();
+		for (int i = 0; i < len; i++) {
+			
+			if (s.at(i) == '.') {
+			
+			}
+			else if (s.at(i) == '*') {
+			
+			}
+			else {
+			
+			}
+
+
+		
+		}
+		return true;
+	}
+
+
+
+
 	void combinationSumR(vector<int>& candidates, int target,int start_idx) {
 		vector<int> result;
 		int t = target;
@@ -249,10 +406,6 @@ public:
 	//	3, 2, 1 → 1, 2, 3
 	//	2, 3, 1 → 3  1  2
 	//	1, 1, 5 → 1, 5, 1
-
-	void nextPermutation(vector<int>& nums) {
-
-	}
 
 
 
@@ -719,6 +872,8 @@ public:
 
 int main()
 {
+
+
 	vector<int> v = { 1, 0, -1, 0, -2, 2 };
 	vector<int> v1 = { 0,2,2,2,10,-3,-9,2,-10,-4,-9,-2,2,8,7 };
 	vector<int> v2 = { 1,1,1,1 };
@@ -757,7 +912,12 @@ int main()
 
 	vector<int> arr000 = { 2,3,6,7 };
 
-	printVector(so.combinationSum(arr000, 7));
+	cout << so.getPermutation(3, 2) << endl;
+
+	cout << so.getPermutation(4, 9) << endl;
+
+	// printVector(so.generateMatrix(10));
+	// printVector(so.combinationSum(arr000, 7));
 
 	//printVector(so.merge(mtx231));
 
