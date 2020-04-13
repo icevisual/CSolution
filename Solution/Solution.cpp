@@ -128,6 +128,56 @@ public:
 class Solution {
 
 public:   
+
+	bool isNumber(string s) {
+
+		int t = 0;
+		while (s.at(t) == ' ') t++;
+		if (t)
+			s = s.substr(t);
+		t = s.length() - 1;
+		while (s.at(t) == ' ') t--;
+		if (t != s.length() - 1)
+			s = s.substr(0,t);
+
+		bool valid_n = false;
+		bool has_e = false;
+		// 
+		int s = 0;
+		for (int i = 0; i < s.length(); i++)
+		{
+			char ch = s.at(i);
+			if (ch >= '0' && ch <= '9')
+			{
+
+			}
+			else if (ch == 'e')
+			{
+				has_e = true;
+				// 前无合法数字
+				if (!valid_n)
+					return false;
+			}
+			else if (ch == '+' || ch == '-')
+			{
+				//if(i != 0 || )
+			}
+			else if (ch == '.')
+			{
+
+			}
+			else if (ch == ' ')
+			{
+				return false;
+			}
+			else
+				return false;
+		}
+		return true;
+	}
+
+
+
 	ListNode* rotateRight(ListNode* head, int k) {
 		if (head == NULL)
 			return head;
