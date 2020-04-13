@@ -127,7 +127,41 @@ public:
 
 class Solution {
 
-public:
+public:   
+	ListNode* rotateRight(ListNode* head, int k) {
+		if (head == NULL)
+			return head;
+		if (head->next == NULL)
+			return head;
+		if (k == 0)
+			return head;
+		// 头指针，用于记录原始头，用于和尾部合并
+		ListNode* phead = head;
+		// 落后头指针 k 步的节点，指向新的末尾节点
+		ListNode* nhead = NULL;
+		int c = 0;
+		int t = 0;
+		while (head->next)
+		{
+			head = head->next;
+			t++;
+		}
+		t ++ ;
+		// 头尾结合
+		head->next = phead;
+		head = head->next;
+		k = t - k % t;
+		// 步数未到，在圈内循环
+		while (c < k)
+		{
+			c++;
+			phead = head;
+			head = head->next;
+		}
+
+		phead->next = NULL;
+		return head;
+	}
 
 	string getPermutation(int n, int k) {
 		vector<int> flag(n + 1);
@@ -909,12 +943,20 @@ int main()
 	};
 	//so.isValidSudoku(mtx2);
 	//printVectorInt(so.spiralOrder(mtx23));
+	vector<int> arr001 = { 1,2 };
+	vector<int> arr000 = { 0,1,2 };
+	printListNode(so.rotateRight(fromArray(arr001), 1));
 
-	vector<int> arr000 = { 2,3,6,7 };
+	cout << endl;
+	printListNode(fromArray(arr000));
+	cout << endl;
+	printListNode(so.rotateRight(fromArray(arr000), 1));
+	printListNode(so.rotateRight(fromArray(arr000), 2));
+	printListNode(so.rotateRight(fromArray(arr000),3));
+	printListNode(so.rotateRight(fromArray(arr000), 4));
+	printListNode(so.rotateRight(fromArray(arr000), 5));
 
-	cout << so.getPermutation(3, 2) << endl;
 
-	cout << so.getPermutation(4, 9) << endl;
 
 	// printVector(so.generateMatrix(10));
 	// printVector(so.combinationSum(arr000, 7));
