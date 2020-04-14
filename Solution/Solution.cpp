@@ -132,39 +132,110 @@ public:
 	bool isNumber(string s) {
 
 		int t = 0;
-		while (s.at(t) == ' ') t++;
+		while (t < s.length() && s.at(t) == ' ') t++;
 		if (t)
+		{
+			if (t == s.length())
+				return false;
 			s = s.substr(t);
+		}
 		t = s.length() - 1;
 		while (s.at(t) == ' ') t--;
 		if (t != s.length() - 1)
-			s = s.substr(0,t);
+			s = s.substr(0,t + 1);
 
-		bool valid_n = false;
-		bool has_e = false;
-		// 
-		int s = 0;
+		unordered_map<string, bool> flagMap;
+		// 数字符号、数字、数字点号、E、e数字符号、e数字、e数字点号
+		flagMap.insert(pair<string, bool>("Sign_N", false));
+		flagMap.insert(pair<string, bool>("Number_N", false));
+		flagMap.insert(pair<string, bool>("Number_N_Before", false));
+		flagMap.insert(pair<string, bool>("Number_N_Point", false));
+		flagMap.insert(pair<string, bool>("Number_N_After", false));
+		flagMap.insert(pair<string, bool>("Symbol_E", false));
+		flagMap.insert(pair<string, bool>("Sign_E", false));
+		flagMap.insert(pair<string, bool>("Number_E", false));
+		flagMap.insert(pair<string, bool>("Number_E_Point", false));
+
+
 		for (int i = 0; i < s.length(); i++)
 		{
 			char ch = s.at(i);
 			if (ch >= '0' && ch <= '9')
 			{
-
+				if (!flagMap["Symbol_E"])
+				{
+					flagMap["Number_N"] = true;
+					if (flagMap["Number_N_Point"])
+					{
+						flagMap["Number_N_After"] = true;
+					}
+					else
+					{
+						flagMap["Number_N_Before"] = true;
+					}
+				}
+				else
+				{
+					flagMap["Number_E"] = true;
+				}
 			}
 			else if (ch == 'e')
 			{
-				has_e = true;
 				// 前无合法数字
-				if (!valid_n)
+				if (!flagMap["Number_N"])
 					return false;
+				if (flagMap["Symbol_E"])
+					return false;
+				flagMap["Symbol_E"] = true;
 			}
 			else if (ch == '+' || ch == '-')
 			{
-				//if(i != 0 || )
+				if (i - 1 >= 0 && (s.at(i - 1) >= '0' && s.at(i - 1) <= '9'))
+					return false;
+				if (i - 1 >= 0 && (s.at(i - 1) == '.'))
+					return false;
+				if (!flagMap["Symbol_E"])
+				{
+					// 已有符号
+					if (flagMap["Sign_N"])
+						return false;
+					
+					// 下一个不是数字
+					if(i + 1 >= s.length() || ( (s.at(i+1) < '0' || s.at(i + 1) > '9') && s.at(i + 1) != '.') )
+						return false;
+					flagMap["Sign_N"] = true;
+				}
+				else
+				{// 已有符号
+					if (flagMap["Sign_E"])
+						return false;
+					if (i + 1 >= s.length() || (s.at(i + 1) < '0' || s.at(i + 1) > '9'))
+						return false;
+					flagMap["Sign_E"] = true;
+				}
 			}
 			else if (ch == '.')
 			{
-
+				// E 之后不能有小数点
+				if (flagMap["Symbol_E"])
+				{
+					return false;
+				}
+				// 已有小数点
+				if (flagMap["Number_N_Point"])
+				{
+					return false;
+				}
+				// 没有前导数
+				/*if (i - 1 >= 0 && (s.at(i - 1) == '-' || s.at(i - 1) == '+'))
+					return false;*/
+				//// 上一个不是数字
+				//if (i - 1 < 0 || (s.at(i - 1) < '0' || s.at(i - 1) > '9'))
+				//	return false;
+				// 下一个不是数字
+		/*		if (i + 1 >= s.length() || (s.at(i + 1) < '0' || s.at(i + 1) > '9'))
+					return false;*/
+				flagMap["Number_N_Point"] = true;
 			}
 			else if (ch == ' ')
 			{
@@ -173,6 +244,13 @@ public:
 			else
 				return false;
 		}
+		if (flagMap["Number_N_Point"] && (!flagMap["Number_N_Before"]&&!flagMap["Number_N_After"]))
+		{
+			return false;
+		}
+		if (flagMap["Symbol_E"] && !flagMap["Number_E"])
+			return false;
+
 		return true;
 	}
 
@@ -995,18 +1073,28 @@ int main()
 	//printVectorInt(so.spiralOrder(mtx23));
 	vector<int> arr001 = { 1,2 };
 	vector<int> arr000 = { 0,1,2 };
-	printListNode(so.rotateRight(fromArray(arr001), 1));
+	cout << (so.isNumber(" +.8 ") == true) << endl;
+	cout << (so.isNumber(" .+1 ") == false) << endl;
+	cout << (so.isNumber(" 6+1 ") == false) << endl;
+	cout << (so.isNumber(" . ") == false) << endl;
+	cout << (so.isNumber(" ") == false) << endl;
+	cout << (so.isNumber(" .5 ") == true) << endl;
+	cout << (so.isNumber(" 3. ") == true) << endl;
 
-	cout << endl;
-	printListNode(fromArray(arr000));
-	cout << endl;
-	printListNode(so.rotateRight(fromArray(arr000), 1));
-	printListNode(so.rotateRight(fromArray(arr000), 2));
-	printListNode(so.rotateRight(fromArray(arr000),3));
-	printListNode(so.rotateRight(fromArray(arr000), 4));
-	printListNode(so.rotateRight(fromArray(arr000), 5));
-
-
+	cout << (so.isNumber("0") == true) << endl;
+	cout << (so.isNumber(" 0.1 ") == true) << endl;
+	cout << (so.isNumber("abc") == false) << endl;
+	cout << (so.isNumber("1 a") == false) << endl;
+	cout << (so.isNumber("2e10") == true) << endl;
+	cout << (so.isNumber(" -90e3   ") == true) << endl;
+	cout << (so.isNumber(" 1e") == false) << endl;
+	cout << (so.isNumber("e3") == false) << endl;
+	cout << (so.isNumber(" 6e-1") == true) << endl;
+	cout << (so.isNumber(" 99e2.5 ") == false) << endl;
+	cout << (so.isNumber("53.5e93") == true) << endl;
+	cout << (so.isNumber(" --6 ") == false) << endl;
+	cout << (so.isNumber("-+3") == false) << endl;
+	cout << (so.isNumber("95a54e53") == false) << endl;
 
 	// printVector(so.generateMatrix(10));
 	// printVector(so.combinationSum(arr000, 7));
