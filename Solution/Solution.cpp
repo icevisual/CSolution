@@ -30,8 +30,9 @@ string vectorString(vector<string> arr, bool vertical = false) {
 	if (vertical)
 		str.append("\n");
 	for (int i = 0; i < arr.size(); i++) {
+		str.append("\"");
 		str.append(arr[i]);
-		str.append(", ");
+		str.append("\", ");
 		if (vertical)
 			str.append("\n");
 	}
@@ -128,6 +129,104 @@ public:
 class Solution {
 
 public:   
+
+	int gn[100] = { 0 };
+
+	void calc_gaps(int s, int n)
+	{
+		int first = ceil(s * 1.0 / (n - 1));
+		int last = floor(s * 1.0 / (n - 1));
+
+		int rest = s - last * (n - 1);
+
+		for (int i = 0; i < n; i++)
+		{
+			gn[i] = last;
+			if (rest)
+			{
+				gn[i] ++;
+				rest--;
+			}
+		}
+
+	}
+
+	vector<string> fullJustify(vector<string>& words, int maxWidth) {
+		vector<string> result;
+		int line_len_sum = 0;
+		int line_word_count = 0;
+		char val[100] = { 0 };
+
+		for (int i = 0; i < 100; i++)
+			val[i] = ' ';
+		
+
+		for (int i = 0; i < words.size(); i++)
+		{
+			
+			if (line_len_sum + words[i].length() + line_word_count > maxWidth)
+			{
+				int gap = maxWidth - line_len_sum;
+				
+				if (line_word_count > 1)
+				{
+					calc_gaps(gap, line_word_count);
+					int first = ceil(gap * 1.0 / (line_word_count - 1));
+					int last = floor(gap * 1.0 / (line_word_count - 1));
+		
+					ostringstream os;
+					int s = 0;
+					for (int j = line_word_count - 1; j > 0; j--) {
+						os << words[i - 1 - j];
+						if (j == 1) {
+		
+							os << string(val, gn[s++]);
+						}
+						else
+							os << string(val, gn[s++]);
+					}
+					os << words[i - 1];
+					result.push_back(os.str());
+				}
+				else
+				{
+					ostringstream os;
+					os << words[i - 1];
+					os << string(val, gap);
+					result.push_back(os.str());
+				}
+
+				line_len_sum = words[i].length();
+				line_word_count = 1;
+			}
+			else
+			{
+				line_len_sum += words[i].length();
+				line_word_count++;
+			}
+		}
+
+		if (line_word_count > 0)
+		{
+			ostringstream os;
+			for (int j = line_word_count - 1; j > 0; j--) {
+				os << words[words.size() - 1 - j];
+				os << " ";
+			}
+			os << words[words.size() - 1];
+
+			int gap = maxWidth - line_len_sum - (line_word_count - 1);
+			if (gap > 0)
+			{
+				os << string(val,gap);
+				result.push_back(os.str());
+			}
+			else
+				result.push_back(os.str());
+		}
+
+		return result;
+	}
 
 	bool isNumber(string s) {
 
@@ -1073,28 +1172,47 @@ int main()
 	//printVectorInt(so.spiralOrder(mtx23));
 	vector<int> arr001 = { 1,2 };
 	vector<int> arr000 = { 0,1,2 };
-	cout << (so.isNumber(" +.8 ") == true) << endl;
-	cout << (so.isNumber(" .+1 ") == false) << endl;
-	cout << (so.isNumber(" 6+1 ") == false) << endl;
-	cout << (so.isNumber(" . ") == false) << endl;
-	cout << (so.isNumber(" ") == false) << endl;
-	cout << (so.isNumber(" .5 ") == true) << endl;
-	cout << (so.isNumber(" 3. ") == true) << endl;
 
-	cout << (so.isNumber("0") == true) << endl;
-	cout << (so.isNumber(" 0.1 ") == true) << endl;
-	cout << (so.isNumber("abc") == false) << endl;
-	cout << (so.isNumber("1 a") == false) << endl;
-	cout << (so.isNumber("2e10") == true) << endl;
-	cout << (so.isNumber(" -90e3   ") == true) << endl;
-	cout << (so.isNumber(" 1e") == false) << endl;
-	cout << (so.isNumber("e3") == false) << endl;
-	cout << (so.isNumber(" 6e-1") == true) << endl;
-	cout << (so.isNumber(" 99e2.5 ") == false) << endl;
-	cout << (so.isNumber("53.5e93") == true) << endl;
-	cout << (so.isNumber(" --6 ") == false) << endl;
-	cout << (so.isNumber("-+3") == false) << endl;
-	cout << (so.isNumber("95a54e53") == false) << endl;
+
+	vector<string> d0 = { "This", "is", "an", "example", "of", "text", "justification." };
+	vector<string> d1 = { "What","must","be","acknowledgment","shall","be" };
+	vector<string> d2 = { "Science","is","what","we","understand","well","enough","to","explain",
+		 "to","a","computer.","Art","is","everything","else","we","do" };
+
+
+	vector<string> d3 = { "ask", "not", "what", "your", "country", "can", "do", "for", "you", "ask", "what", "you", "can", "do", "for", "your", "country" };
+
+	so.calc_gaps(4,4);
+	so.calc_gaps(5, 4);
+	so.calc_gaps(6, 4);
+	so.calc_gaps(5, 3);
+	
+	printVector(so.fullJustify(d3, 16), true);
+	printVector(so.fullJustify(d0, 16), true);
+	printVector(so.fullJustify(d1, 16), true);
+	printVector(so.fullJustify(d2, 20), true);
+	//cout << (so.isNumber(" +.8 ") == true) << endl;
+	//cout << (so.isNumber(" .+1 ") == false) << endl;
+	//cout << (so.isNumber(" 6+1 ") == false) << endl;
+	//cout << (so.isNumber(" . ") == false) << endl;
+	//cout << (so.isNumber(" ") == false) << endl;
+	//cout << (so.isNumber(" .5 ") == true) << endl;
+	//cout << (so.isNumber(" 3. ") == true) << endl;
+
+	//cout << (so.isNumber("0") == true) << endl;
+	//cout << (so.isNumber(" 0.1 ") == true) << endl;
+	//cout << (so.isNumber("abc") == false) << endl;
+	//cout << (so.isNumber("1 a") == false) << endl;
+	//cout << (so.isNumber("2e10") == true) << endl;
+	//cout << (so.isNumber(" -90e3   ") == true) << endl;
+	//cout << (so.isNumber(" 1e") == false) << endl;
+	//cout << (so.isNumber("e3") == false) << endl;
+	//cout << (so.isNumber(" 6e-1") == true) << endl;
+	//cout << (so.isNumber(" 99e2.5 ") == false) << endl;
+	//cout << (so.isNumber("53.5e93") == true) << endl;
+	//cout << (so.isNumber(" --6 ") == false) << endl;
+	//cout << (so.isNumber("-+3") == false) << endl;
+	//cout << (so.isNumber("95a54e53") == false) << endl;
 
 	// printVector(so.generateMatrix(10));
 	// printVector(so.combinationSum(arr000, 7));
