@@ -58,7 +58,6 @@ void printVector(vector<string> arr, bool vertical = false) {
 	std::cout << vectorString(arr, vertical) << endl;
 }
 
-
 template<typename T, typename T1>
 
 bool KeyNotExistsAndSet(unordered_map<T, T1> &mp, pair<T, T1> val) {
@@ -78,13 +77,11 @@ bool KeyNotExistsAndSet(unordered_map<T, T1> &mp, T Key, T1 val) {
 	return false;
 }
 
-
 struct ListNode {
 	int val;
 	ListNode *next;
 	ListNode(int x) : val(x), next(NULL) {}
 };
-
 
 ListNode * fromArray(vector<int> arr) {
 	ListNode prehead(0);
@@ -110,13 +107,10 @@ void printListNode(ListNode * node) {
 	cout << endl;
 }
 
-
-
 bool cmp_vector_int(vector<int> a, vector<int> b)
 {
 	return a[0] < b[0];
 }
-
 
 class Reg {
 
@@ -130,11 +124,65 @@ class Solution {
 
 public:   
 
+	bool searchMatrix(vector<vector<int>>& matrix, int target) {
+
+
+
+		return false;
+	}
+
+
+	void setZeroes(vector<vector<int>>& matrix) {
+		int n = matrix.size();
+		int m = matrix[0].size();
+
+		vector<int> nf(n);
+		vector<int> mf(m);
+		for (int i = 0; i < n; i++)
+			nf[i] = 0;
+		for (int i = 0; i < m; i++)
+			mf[i] = 0;
+
+		for (int i = 0; i < n; i++)
+		{
+			for (int j = 0; j < m; j++)
+			{
+				if (matrix[i][j] == 0)
+				{
+					nf[i] = 1;
+					mf[j] = 1;
+				}
+			}
+		}
+
+		for (int i = 0; i < n; i++)
+		{
+			if (nf[i] == 1)
+			{
+				
+				for (int j = 0; j < m; j++)
+				{
+					matrix[i][j] = 0;
+				}
+			}
+		}
+		for (int i = 0; i < m; i++)
+		{
+			if (mf[i] == 1)
+			{
+				for (int j = 0; j < n; j++)
+				{
+					matrix[j][i] = 0;
+				}
+			}
+		}
+
+	}
+
 	int gn[100] = { 0 };
 
 	void calc_gaps(int s, int n)
 	{
-		int first = ceil(s * 1.0 / (n - 1));
 		int last = floor(s * 1.0 / (n - 1));
 
 		int rest = s - last * (n - 1);
@@ -353,8 +401,6 @@ public:
 		return true;
 	}
 
-
-
 	ListNode* rotateRight(ListNode* head, int k) {
 		if (head == NULL)
 			return head;
@@ -435,8 +481,6 @@ public:
 
 		return os.str();
 	}
-
-
 
 	vector<vector<int>> generateMatrix(int n) {
 
@@ -534,8 +578,6 @@ public:
 		}
 		return true;
 	}
-
-
 
 
 	void combinationSumR(vector<int>& candidates, int target,int start_idx) {
@@ -668,8 +710,6 @@ public:
 	//	2, 3, 1 → 3  1  2
 	//	1, 1, 5 → 1, 5, 1
 
-
-
 	vector<vector<int>> merge(vector<vector<int>>& intervals) {
 
 		vector<vector<int>> result;
@@ -697,7 +737,6 @@ public:
 
 		return result;
 	}
-
 
 	vector<int> spiralOrder(vector<vector<int>>& matrix) {
 
@@ -1182,15 +1221,27 @@ int main()
 
 	vector<string> d3 = { "ask", "not", "what", "your", "country", "can", "do", "for", "you", "ask", "what", "you", "can", "do", "for", "your", "country" };
 
-	so.calc_gaps(4,4);
-	so.calc_gaps(5, 4);
-	so.calc_gaps(6, 4);
-	so.calc_gaps(5, 3);
+	vector<vector<int>> z0 = {
+	  {1,1,1},
+	  {1,0,1},
+	  {1,1,1}
+	};
+	vector<vector<int>> z1 = {
+  {0,1,2,0},
+  {3,4,5,2},
+  {1,3,1,5}
+	};
+	so.setZeroes(z0);
+	printVector(z0);
+	so.setZeroes(z1);
+	printVector(z1);
+	/*
+
 	
 	printVector(so.fullJustify(d3, 16), true);
 	printVector(so.fullJustify(d0, 16), true);
 	printVector(so.fullJustify(d1, 16), true);
-	printVector(so.fullJustify(d2, 20), true);
+	printVector(so.fullJustify(d2, 20), true);*/
 	//cout << (so.isNumber(" +.8 ") == true) << endl;
 	//cout << (so.isNumber(" .+1 ") == false) << endl;
 	//cout << (so.isNumber(" 6+1 ") == false) << endl;
