@@ -8,6 +8,7 @@
 #include <vector>
 #include <unordered_map>
 #include <map>
+#include <stack>
 using namespace std;
 
 string vectorInt2String(vector<int> arr) {
@@ -123,11 +124,137 @@ public:
 class Solution {
 
 public:   
+	string simplifyPath(string path) {
+
+		stack<string> paths;
+		int si = -1;
+		int ei = -1;
+		int i = 0;
+		int len = path.length();
+		while (i < len)
+		{
+			while (i < len && path.at(i) == '/')
+			{
+				i++;
+			}
+			si = i - 1;
+			if (i < len)
+			{
+				if (path.at(i) == '.') {
+					
+					ei = si + 1;
+					while (ei < len && path.at(ei) != '/')
+					{
+						ei++;
+					}
+					string pn = path.substr(si, ei - si);
+
+					if (pn.size() ==3  && pn[2] == '.')
+					{
+						if (paths.size() > 0)
+							paths.pop();
+					}
+					else if (pn.size() == 2)
+					{
+
+					}
+					else {
+						paths.push(pn);
+					}
+
+					i = ei;
+
+				}
+				else
+				{
+					ei = si + 1;
+					while (ei < len && path.at(ei) != '/')
+					{
+						ei++;
+					}
+					paths.push(path.substr(si,ei - si));
+					i = ei;
+				}
+			}
+		}
+
+		if (paths.size() == 0)
+			return "/";
+		stack<string> pathsr;
+		ostringstream os;
+		while (!paths.empty())
+		{
+			pathsr.push(paths.top());
+			paths.pop();
+		}
+
+		while (!pathsr.empty())
+		{
+			os << pathsr.top();
+			pathsr.pop();
+		}
+
+		return os.str();
+	}
+
+	void sortColors(vector<int>& nums) {
+
+		char f[] = { 0,0,0 };
+
+		for (int i = 0; i < nums.size(); i++)
+		{
+			f[nums[i]] ++;
+		}
+		int j = 0;
+		for (int i = 0; i < 3; i++)
+		{
+			while (f[i] > 0) {
+				nums[j++] = i;
+				f[i] --;
+			}
+		}
+	}
+
+	template <typename T>
+	int halfSearch3(vector<T> data, T target, int start, int end) {
+
+		if (start >= end)
+		{
+			if (target < data[start])
+				return start - 1;
+			return start;
+		}
+		int mid = int((start + end) / 2);
+
+		if (data[mid] == target)
+			return mid;
+		else if (data[mid] > target)
+			return halfSearch3(data, target, start, mid - 1);
+		else
+			return halfSearch3(data, target, mid + 1, end);
+	}
 
 	bool searchMatrix(vector<vector<int>>& matrix, int target) {
+		int n = matrix.size();
+		if (n == 0)
+			return false;
+		int m = matrix[0].size();
+		if (m == 0)
+			return false;
+		for (int i = 0; i < n; i++)
+		{
+			if (target >= matrix[i][0] && target <= matrix[i][m - 1])
+			{
+				int t = halfSearch3(matrix[i],target,0,m - 1);
+				if (matrix[i][t] != target)
+					return false;
+				else
+				{
+					return true;
+				}
+			}
 
-
-
+		}
 		return false;
 	}
 
@@ -1222,19 +1349,34 @@ int main()
 	vector<string> d3 = { "ask", "not", "what", "your", "country", "can", "do", "for", "you", "ask", "what", "you", "can", "do", "for", "your", "country" };
 
 	vector<vector<int>> z0 = {
-	  {1,1,1},
-	  {1,0,1},
-	  {1,1,1}
+	  {1,   3,  5,  7},
+	  {10, 11, 16, 20},
+	  {23, 30, 34, 50}
 	};
 	vector<vector<int>> z1 = {
-  {0,1,2,0},
-  {3,4,5,2},
-  {1,3,1,5}
+	  {1,   3,  5,  7},
+	  {10, 11, 16, 20},
+	  {23, 30, 34, 50}
 	};
-	so.setZeroes(z0);
-	printVector(z0);
-	so.setZeroes(z1);
-	printVector(z1);
+	vector<vector<int>> z2 = { {}
+	};
+	vector<int> c0 = { 2,0,2,1,1,0
+	}; 
+	cout << so.simplifyPath("/.a/.b/.c/.../.././") << endl;
+	cout << so.simplifyPath("/...") << endl;
+	cout << so.simplifyPath("/home//foo/") << endl;
+	cout << so.simplifyPath("/../") << endl;
+	// 
+	cout << so.simplifyPath("/a/./b/../../c/") << endl;
+	cout << so.simplifyPath("/a/../../b/../c//.//") << endl;
+	cout << so.simplifyPath("/a//b////c/d//././/..") << endl;
+
+	
+/*
+	cout << (so.searchMatrix(z0, 3) == true) << endl;
+	cout << (so.searchMatrix(z1, 13) == true)<< endl;
+	cout << (so.searchMatrix(z2, 13) == true) << endl;*/
+
 	/*
 
 	
