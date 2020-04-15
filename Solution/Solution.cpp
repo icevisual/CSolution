@@ -124,6 +124,58 @@ public:
 class Solution {
 
 public:   
+
+
+	int numDecodings(string s) {
+		if (s.at(0) == '0')
+			return 0;
+		vector<int> c;
+		c.push_back(1);
+		c.push_back(1);
+
+
+
+		vector<int> t;
+
+		// 处理 0 
+		for (int i = 0; i < s.length(); i++)
+		{
+			int cn = s.at(i) - '0';
+
+			if (cn == 0 || (i + 1 < s.length() && s.at(i + 1) == '0'))
+			{
+				if (cn > 2 || cn == 0)
+					return 0;
+				else
+				{// 10 20 不可与前结合
+					t.push_back(60);
+					i++;
+				}
+			}
+			else
+			{
+				t.push_back(cn);
+			}
+		}
+		for (int i = 1; i < t.size(); i++)
+		{
+
+			int cn = t[i];
+			int cn0 = t[i - 1] * 10 + t[i];
+
+
+			if (cn0 > 26) {
+				c.push_back(c[i]);
+			}
+			else
+			{
+				c.push_back(c[i] + c[i-1]);
+			}
+		}
+
+		return c[t.size()];
+	}
+
 	string simplifyPath(string path) {
 
 		stack<string> paths;
@@ -1362,14 +1414,32 @@ int main()
 	};
 	vector<int> c0 = { 2,0,2,1,1,0
 	}; 
-	cout << so.simplifyPath("/.a/.b/.c/.../.././") << endl;
-	cout << so.simplifyPath("/...") << endl;
-	cout << so.simplifyPath("/home//foo/") << endl;
-	cout << so.simplifyPath("/../") << endl;
-	// 
-	cout << so.simplifyPath("/a/./b/../../c/") << endl;
-	cout << so.simplifyPath("/a/../../b/../c//.//") << endl;
-	cout << so.simplifyPath("/a//b////c/d//././/..") << endl;
+
+	cout << (so.numDecodings("2222") == 5) << endl;
+	cout << (so.numDecodings("1212") == 5) << endl;
+	cout << (so.numDecodings("100") == 0) << endl;
+	cout << (so.numDecodings("1110") == 2) << endl;
+	cout << (so.numDecodings("110") == 1) << endl;
+
+	cout << (so.numDecodings("101") == 1) << endl;
+
+	cout << (so.numDecodings("12") == 2) << endl;
+	cout << (so.numDecodings("226") == 3) << endl;
+	cout << (so.numDecodings("2262") == 3) << endl;
+
+
+	cout << (so.numDecodings("0") == 0) << endl;
+	cout << (so.numDecodings("10") == 1) << endl;
+
+
+	//cout << so.simplifyPath("/.a/.b/.c/.../.././") << endl;
+	//cout << so.simplifyPath("/...") << endl;
+	//cout << so.simplifyPath("/home//foo/") << endl;
+	//cout << so.simplifyPath("/../") << endl;
+	//// 
+	//cout << so.simplifyPath("/a/./b/../../c/") << endl;
+	//cout << so.simplifyPath("/a/../../b/../c//.//") << endl;
+	//cout << so.simplifyPath("/a//b////c/d//././/..") << endl;
 
 	
 /*
