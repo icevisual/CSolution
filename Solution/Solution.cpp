@@ -121,10 +121,95 @@ public:
 	bool repeatable = false;
 };
 
+
+struct TreeNode {
+     int val;
+     TreeNode *left;
+     TreeNode *right;
+     TreeNode(int x) : val(x), left(NULL), right(NULL) {}
+};
+ 
 class Solution {
 
 public:   
 
+	vector<int> inorderTraversal(TreeNode* root) {
+		
+		vector<int> result;
+		if (root == NULL)
+			return result;
+		stack<TreeNode*> st;
+
+		st.push(root);
+
+
+		while (!st.empty())
+		{
+			TreeNode* node = st.top();
+
+			if (node->left != NULL)
+			{
+				st.push(node->left);
+				node->left = NULL;
+			}
+			else
+			{
+				result.push_back(node->val);
+				st.pop();
+
+				if (node->right != NULL)
+				{
+					st.push(node->right);
+					node->right = NULL;
+				}
+			}
+
+		}
+
+
+		return result;
+	}
+
+
+	ListNode* reverseBetween(ListNode* head, int m, int n) {
+		if (head == NULL || head->next == NULL)
+			return head;
+		m--;
+		n--;
+		ListNode r(0);// pre first
+		r.next = head;
+		ListNode* phead = &r;// pre first
+		
+		while (m > 0 && head->next != NULL)
+		{
+			phead = head;
+			head = head->next;
+			m--;
+			n--;
+		}
+		ListNode* ehead = head;// last node
+
+		ListNode* shead = ehead;
+
+		head = head->next;
+	
+		ListNode* t;
+		while (n > 0)
+		{
+			if (head == NULL)
+				break;
+			t = head;
+			head = head->next;
+		
+			t->next = shead;
+			shead = t;
+			n--;
+		}
+		phead->next = shead;
+		ehead->next = head;
+
+		return r.next;
+	}
 
 	int numDecodings(string s) {
 		if (s.at(0) == '0')
@@ -1415,21 +1500,27 @@ int main()
 	vector<int> c0 = { 2,0,2,1,1,0
 	}; 
 
-	cout << (so.numDecodings("2222") == 5) << endl;
-	cout << (so.numDecodings("1212") == 5) << endl;
-	cout << (so.numDecodings("100") == 0) << endl;
-	cout << (so.numDecodings("1110") == 2) << endl;
-	cout << (so.numDecodings("110") == 1) << endl;
+	printListNode(so.reverseBetween(fromArray({ 1,2 }), 3, 5));
+	printListNode(so.reverseBetween(fromArray({ 1,2,3,4,5 }), 1, 5));
+	printListNode(so.reverseBetween(fromArray({ 1,2,3,4,5 }), 3, 5));
 
-	cout << (so.numDecodings("101") == 1) << endl;
+	printListNode(so.reverseBetween(fromArray({ 1,2,3,4,5 }), 2, 4));
+	printListNode(so.reverseBetween(fromArray({ 1,2,3,4,5 }), 1, 4));
+	//cout << (so.numDecodings("2222") == 5) << endl;
+	//cout << (so.numDecodings("1212") == 5) << endl;
+	//cout << (so.numDecodings("100") == 0) << endl;
+	//cout << (so.numDecodings("1110") == 2) << endl;
+	//cout << (so.numDecodings("110") == 1) << endl;
 
-	cout << (so.numDecodings("12") == 2) << endl;
-	cout << (so.numDecodings("226") == 3) << endl;
-	cout << (so.numDecodings("2262") == 3) << endl;
+	//cout << (so.numDecodings("101") == 1) << endl;
+
+	//cout << (so.numDecodings("12") == 2) << endl;
+	//cout << (so.numDecodings("226") == 3) << endl;
+	//cout << (so.numDecodings("2262") == 3) << endl;
 
 
-	cout << (so.numDecodings("0") == 0) << endl;
-	cout << (so.numDecodings("10") == 1) << endl;
+	//cout << (so.numDecodings("0") == 0) << endl;
+	//cout << (so.numDecodings("10") == 1) << endl;
 
 
 	//cout << so.simplifyPath("/.a/.b/.c/.../.././") << endl;
