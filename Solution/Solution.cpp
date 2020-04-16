@@ -132,23 +132,40 @@ struct TreeNode {
 class Solution {
 
 public:   
-	template <typename T>
-	int halfSearch3(vector<T> data, T target, int start, int end) {
 
-		if (start >= end)
+
+
+
+
+	ListNode* deleteDuplicates(ListNode* head) {
+
+		ListNode result(-1); 
+		result.next = head;
+		ListNode *p = &result;
+	REP:
+		while (head != NULL)
 		{
-			if (target < data[start])
-				return start - 1;
-			return start;
-		}
-		int mid = int((start + end) / 2);
 
-		if (data[mid] == target)
-			return mid;
-		else if (data[mid] > target)
-			return halfSearch3(data, target, start, mid - 1);
-		else
-			return halfSearch3(data, target, mid + 1, end);
+			bool has_rep = false;
+			while (head->next != NULL && head->val == head->next->val)
+			{
+				head = head->next;
+				has_rep = true;
+			}
+			if (has_rep)
+			{
+				
+				head = head->next;
+				if (NULL == head)
+					p->next = head;
+				goto REP;
+			}
+			p->next = head;
+			p = head;
+			if (NULL != head)
+				head = head->next;
+		}
+		return result.next;
 	}
 
 	bool search(vector<int>& nums, int target) {
@@ -1567,14 +1584,24 @@ int main()
 	vector<int> vs2 = { 3,1 };
 	vector<int> vs3 = {  };
 	vector<int> vs4 = { 1,1 };
-	cout << so.search(vs2,0) << endl;
-	cout << so.search(vs3, 0) << endl;
-	cout << so.search(vs4, 0) << endl;
+
+	auto nd = fromArray({1,2,3,3,4,4,5});
+	printListNode(so.deleteDuplicates(nd));
+	auto nd1 = fromArray({ 1,1,1,2,3 });
+	printListNode(so.deleteDuplicates(nd1));
+	auto nd2 = fromArray({ 1,1,1,1 });
+	printListNode(so.deleteDuplicates(nd2));
+	auto nd3 = fromArray({ 1,2,3,3,4,4,5,5 });
+	printListNode(so.deleteDuplicates(nd3));
+
+	//cout << so.search(vs2,0) << endl;
+	//cout << so.search(vs3, 0) << endl;
+	//cout << so.search(vs4, 0) << endl;
 
 
-	cout << (so.exist(ee1, "ABCCED") == true) << endl;
-	cout << (so.exist(ee1, "SEE") == true) << endl;
-	cout << (so.exist(ee1, "ABCB") == false) << endl;
+	//cout << (so.exist(ee1, "ABCCED") == true) << endl;
+	//cout << (so.exist(ee1, "SEE") == true) << endl;
+	//cout << (so.exist(ee1, "ABCB") == false) << endl;
 
 
 	//printListNode(so.reverseBetween(fromArray({ 1,2 }), 3, 5));
