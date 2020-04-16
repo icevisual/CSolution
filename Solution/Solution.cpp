@@ -128,14 +128,116 @@ struct TreeNode {
      TreeNode *right;
      TreeNode(int x) : val(x), left(NULL), right(NULL) {}
 };
+
+#define IN_MAP(t,v) (t.find(v) != t.end())
  
 class Solution {
 
 public:   
+	string minWindow(string s, string t) {
+	
+	}
+	string minWindow0(string s, string t) {
+
+
+		if (s == "" || t == "")
+			return "";
+		
+		
+		cout << "s = " << s << " t = " << t << endl;
+
+		unordered_map<char, vector<int>> mp;
+		unordered_map<char, int> f;
+
+		for (int i = 0; i < t.length(); i++)
+		{
+			if (!IN_MAP(mp, t.at(i)))
+			{
+				mp.insert(pair<char, vector<int>>(t.at(i), {1,0}));
+				f.insert(pair<char, int>(t.at(i), 1));
+			}
+			else
+			{
+				mp[t.at(i)][0] ++;
+	
+			}
+		}
+		int n = s.length();
+		int l = 0, r = 0;
+		int min_l = -1, min_r = 100000;
+		while (r < n)
+		{
+			while (!f.empty() && r < n)
+			{
+				if(IN_MAP(mp, s.at(r)))
+				{
+					mp[s.at(r)][1]++;
+					if(mp[s.at(r)][1] == mp[s.at(r)][0])
+					// 标志为已有
+					{
+						f.erase(s.at(r));
+					}
+				}
+				else
+				{
+				}
+				r++;
+			}
+			if (f.empty())
+			{
+				while (l <= r)
+				{
+					if (IN_MAP(mp, s.at(l)))
+					{
+						if (mp[s.at(l)][1] == mp[s.at(l)][0])
+						{
+
+							if (r - l < min_r - min_l)
+							{
+								min_l = l;
+								min_r = r;
+								if(min_r - min_l == t.length())
+									return s.substr(min_l, min_r - min_l);
+							}
+						}
+						mp[s.at(l)][1]--;
+
+						if (mp[s.at(l)][1] < mp[s.at(l)][0])
+						{
+							f.insert(pair<char, int>(s.at(l), 0));
+							l++;
+							break;
+						}
+					}
+					l++;
+				}
+			}
+			cout << s.substr(l, r - l) << endl;
+			
+		}
+		if (min_l == -1)
+			return "";
+		return s.substr(min_l,min_r - min_l);
+	}
 
 
 
-
+	int removeDuplicates(vector<int>& nums) {
+		if (nums.size() <= 2)
+			return nums.size();
+		int p = 1;
+		for (int i = 2; i < nums.size(); i++)
+		{
+			if (nums[p - 1] == nums[p] && nums[p] == nums[i]) {
+			
+			}
+			else
+			{
+				nums[++p] = nums[i];
+			}
+		}
+		return p + 1;
+	}
 
 	ListNode* deleteDuplicates(ListNode* head) {
 
@@ -1585,14 +1687,23 @@ int main()
 	vector<int> vs3 = {  };
 	vector<int> vs4 = { 1,1 };
 
-	auto nd = fromArray({1,2,3,3,4,4,5});
-	printListNode(so.deleteDuplicates(nd));
-	auto nd1 = fromArray({ 1,1,1,2,3 });
-	printListNode(so.deleteDuplicates(nd1));
-	auto nd2 = fromArray({ 1,1,1,1 });
-	printListNode(so.deleteDuplicates(nd2));
-	auto nd3 = fromArray({ 1,2,3,3,4,4,5,5 });
-	printListNode(so.deleteDuplicates(nd3));
+	cout << so.minWindow("ADOBECODEBANC", "ABC") << endl;
+
+		cout << so.minWindow("acbbaca", "aba") << endl;
+		cout << so.minWindow("ABAACBAB", "ABC") << endl;
+
+	cout << so.minWindow("ABAACBAB", "CF") << endl;
+	cout << so.minWindow("a", "a") << endl;
+	cout << so.minWindow("a", "aa") << endl;
+
+	//auto nd = fromArray({1,2,3,3,4,4,5});
+	//printListNode(so.deleteDuplicates(nd));
+	//auto nd1 = fromArray({ 1,1,1,2,3 });
+	//printListNode(so.deleteDuplicates(nd1));
+	//auto nd2 = fromArray({ 1,1,1,1 });
+	//printListNode(so.deleteDuplicates(nd2));
+	//auto nd3 = fromArray({ 1,2,3,3,4,4,5,5 });
+	//printListNode(so.deleteDuplicates(nd3));
 
 	//cout << so.search(vs2,0) << endl;
 	//cout << so.search(vs3, 0) << endl;
