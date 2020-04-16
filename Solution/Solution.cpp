@@ -135,16 +135,85 @@ class Solution {
 
 public:   
 	string minWindow(string s, string t) {
-	
+
+		if (s == "" || t == "")
+			return "";
+
+
+		cout << "s = " << s << " t = " << t << endl;
+
+		int f[128] = { 0 };
+
+		int tn = t.length();
+
+		int mp[128] = { 0 };
+
+		for (int i = 0; i < t.length(); i++)
+		{
+			mp[t.at(i)] ++;
+		}
+		int n = s.length();
+		int l = 0, r = 0;
+		int min_l = -1, min_r = 100000;
+		int c = 0;
+		while (r < n)
+		{
+			while (c < tn && r < n)
+			{
+				if (mp[s.at(r)] > 0) {
+					f[s.at(r)] ++;
+					if (f[s.at(r)] <= mp[s.at(r)])
+						c++;
+				}
+				r++;
+			}
+
+
+
+			cout << "D:" << s.substr(l,r-l) << endl;
+
+			if (c == tn)
+			{
+				while (l <= r)
+				{
+					if (mp[s.at(l)] > 0) {
+						if (f[s.at(l)] == mp[s.at(l)])
+						{
+							if (r - l < min_r - min_l)
+							{
+								min_l = l;
+								min_r = r;
+								if (min_r - min_l == tn)
+									return s.substr(min_l, min_r - min_l);
+							}
+						}
+						f[s.at(l)] --;
+						if (f[s.at(l)] < mp[s.at(l)])
+						{
+							l++;
+							c--;
+							break;
+						}
+					}
+					l++;
+				}
+				cout << "F:" << s.substr(l, r - l) << endl;
+			}
+
+		}
+		if (min_l == -1)
+			return "";
+		return s.substr(min_l, min_r - min_l);
 	}
+
+
+
 	string minWindow0(string s, string t) {
 
 
 		if (s == "" || t == "")
 			return "";
 		
-		
-		cout << "s = " << s << " t = " << t << endl;
 
 		unordered_map<char, vector<int>> mp;
 		unordered_map<char, int> f;
@@ -219,8 +288,6 @@ public:
 			return "";
 		return s.substr(min_l,min_r - min_l);
 	}
-
-
 
 	int removeDuplicates(vector<int>& nums) {
 		if (nums.size() <= 2)
@@ -1686,11 +1753,11 @@ int main()
 	vector<int> vs2 = { 3,1 };
 	vector<int> vs3 = {  };
 	vector<int> vs4 = { 1,1 };
-
+	cout << so.minWindow("a", "b") << endl;
 	cout << so.minWindow("ADOBECODEBANC", "ABC") << endl;
 
-		cout << so.minWindow("acbbaca", "aba") << endl;
-		cout << so.minWindow("ABAACBAB", "ABC") << endl;
+	cout << so.minWindow("acbbaca", "aba") << endl;
+	cout << so.minWindow("ABAACBAB", "ABC") << endl;
 
 	cout << so.minWindow("ABAACBAB", "CF") << endl;
 	cout << so.minWindow("a", "a") << endl;
