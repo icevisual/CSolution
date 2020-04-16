@@ -132,7 +132,83 @@ struct TreeNode {
 class Solution {
 
 public:   
+	template <typename T>
+	int halfSearch3(vector<T> data, T target, int start, int end) {
+
+		if (start >= end)
+		{
+			if (target < data[start])
+				return start - 1;
+			return start;
+		}
+		int mid = int((start + end) / 2);
+
+		if (data[mid] == target)
+			return mid;
+		else if (data[mid] > target)
+			return halfSearch3(data, target, start, mid - 1);
+		else
+			return halfSearch3(data, target, mid + 1, end);
+	}
+
+	bool search(vector<int>& nums, int target) {
+
+		int n = nums.size();
+		if (n == 0)
+			return false;
+		if (n == 1)
+			return nums[0] == target;
+		int i = 1;
+
+		while (i < n && nums[i - 1] <= nums[i])
+		{
+			i++;
+		}
+		if (i == n)
+		{
+			int idx = halfSearch(nums, target, 0, n - 1);
+			return idx >=0 && nums[idx] == target;
+		}
+		else {
+			if (target >= nums[0] && target <= nums[i - 1])
+			{
+				int idx = halfSearch(nums, target, 0, i - 1);
+				return nums[idx] == target;
+			}
+			else {
+				int idx = halfSearch(nums, target, i, n - 1);
+				return nums[idx] == target;
+			}
+
+		}
+
+		return false;
+	}
+
 	bool exist(vector<vector<char>>& board, string word) {
+		vector<vector<vector<int>>> mp(27);
+
+		int n = board.size();
+		int m = board[0].size();
+
+		for (int i = 0; i < n; i++)
+		{
+			for (int j = 0; j < m; j++)
+			{
+				mp[board[i][j] - 'A'].push_back({ i,j });
+			}
+		}
+
+		for (int i = 0; i < word.size(); i++)
+		{
+			auto p =  mp[word[i] - 'A'];
+			if (p.size() == 0)
+				return false;
+			else
+			{
+
+			}
+		}
 
 		return false;
 	}
@@ -355,24 +431,6 @@ public:
 		}
 	}
 
-	template <typename T>
-	int halfSearch3(vector<T> data, T target, int start, int end) {
-
-		if (start >= end)
-		{
-			if (target < data[start])
-				return start - 1;
-			return start;
-		}
-		int mid = int((start + end) / 2);
-
-		if (data[mid] == target)
-			return mid;
-		else if (data[mid] > target)
-			return halfSearch3(data, target, start, mid - 1);
-		else
-			return halfSearch3(data, target, mid + 1, end);
-	}
 
 	bool searchMatrix(vector<vector<int>>& matrix, int target) {
 		int n = matrix.size();
@@ -385,7 +443,7 @@ public:
 		{
 			if (target >= matrix[i][0] && target <= matrix[i][m - 1])
 			{
-				int t = halfSearch3(matrix[i],target,0,m - 1);
+				int t = halfSearch(matrix[i],target,0,m - 1);
 				if (matrix[i][t] != target)
 					return false;
 				else
@@ -1440,10 +1498,9 @@ public:
 int main()
 {
 
-
 	vector<int> v = { 1, 0, -1, 0, -2, 2 };
 	vector<int> v1 = { 0,2,2,2,10,-3,-9,2,-10,-4,-9,-2,2,8,7 };
-	vector<int> v2 = { 1,1,1,1 };
+	vector<int> v2 = { 3,1 };
 
 	Solution so;
 
@@ -1502,13 +1559,30 @@ int main()
 	};
 	vector<int> c0 = { 2,0,2,1,1,0
 	}; 
+	vector<vector<char>> ee1 = {
+  {'A','B','C','E'},
+  {'S','F','C','S'},
+  {'A','D','E','E'}
+	};
+	vector<int> vs2 = { 3,1 };
+	vector<int> vs3 = {  };
+	vector<int> vs4 = { 1,1 };
+	cout << so.search(vs2,0) << endl;
+	cout << so.search(vs3, 0) << endl;
+	cout << so.search(vs4, 0) << endl;
 
-	printListNode(so.reverseBetween(fromArray({ 1,2 }), 3, 5));
-	printListNode(so.reverseBetween(fromArray({ 1,2,3,4,5 }), 1, 5));
-	printListNode(so.reverseBetween(fromArray({ 1,2,3,4,5 }), 3, 5));
 
-	printListNode(so.reverseBetween(fromArray({ 1,2,3,4,5 }), 2, 4));
-	printListNode(so.reverseBetween(fromArray({ 1,2,3,4,5 }), 1, 4));
+	cout << (so.exist(ee1, "ABCCED") == true) << endl;
+	cout << (so.exist(ee1, "SEE") == true) << endl;
+	cout << (so.exist(ee1, "ABCB") == false) << endl;
+
+
+	//printListNode(so.reverseBetween(fromArray({ 1,2 }), 3, 5));
+	//printListNode(so.reverseBetween(fromArray({ 1,2,3,4,5 }), 1, 5));
+	//printListNode(so.reverseBetween(fromArray({ 1,2,3,4,5 }), 3, 5));
+
+	//printListNode(so.reverseBetween(fromArray({ 1,2,3,4,5 }), 2, 4));
+	//printListNode(so.reverseBetween(fromArray({ 1,2,3,4,5 }), 1, 4));
 	//cout << (so.numDecodings("2222") == 5) << endl;
 	//cout << (so.numDecodings("1212") == 5) << endl;
 	//cout << (so.numDecodings("100") == 0) << endl;
