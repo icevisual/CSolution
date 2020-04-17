@@ -134,13 +134,75 @@ struct TreeNode {
 class Solution {
 
 public:   
+	vector<vector<int>> combineR(int n0,int n1, int k) {
+		vector<vector<int>> result;
+		
+		if (k == 1)
+		{
+			for(int i = n0;i <= n1 ; i ++)
+				result.push_back({ i });
+			return result;
+		}
+
+		int f = n1 - (k - 1);
+		for (int i = n0; i <= f; i++)
+		{
+			vector<vector<int>> sub = combineR(i + 1,n1,k-1);
+			
+			for (int j = 0; j < sub.size(); j++)
+			{
+				result.push_back({ i });
+				for (int k = 0; k < sub[j].size(); k++)
+					result[result.size() - 1].push_back(sub[j][k]);
+			}
+		}
+
+		return result;
+	}
+
+	vector<vector<int>> combine(int n, int k) {
+		return combineR(1,n,k);
+	}
+
+	vector<vector<int>> combine1(int n, int k) {
+		return combineR(1, n, k);
+	}
+
+
+	ListNode* partition(ListNode* head, int x) {
+
+		ListNode sHeader(0);
+		ListNode gHeader(0);
+
+		ListNode  * s_p = &sHeader;
+		ListNode  * g_p = &gHeader;
+
+
+		while (head != NULL)
+		{
+			if (head->val < x) {
+				s_p = s_p->next = head;
+			}
+			else {
+				g_p = g_p->next = head;
+			}
+			head = head->next;
+		}
+
+		s_p->next = gHeader.next;
+		g_p->next = NULL;
+		return sHeader.next;
+	}
+
+
+
 	string minWindow(string s, string t) {
 
 		if (s == "" || t == "")
 			return "";
 
 
-		cout << "s = " << s << " t = " << t << endl;
+		//cout << "s = " << s << " t = " << t << endl;
 
 		int f[128] = { 0 };
 
@@ -170,7 +232,7 @@ public:
 
 
 
-			cout << "D:" << s.substr(l,r-l) << endl;
+			//cout << "D:" << s.substr(l,r-l) << endl;
 
 			if (c == tn)
 			{
@@ -197,7 +259,7 @@ public:
 					}
 					l++;
 				}
-				cout << "F:" << s.substr(l, r - l) << endl;
+				//cout << "F:" << s.substr(l, r - l) << endl;
 			}
 
 		}
@@ -205,8 +267,6 @@ public:
 			return "";
 		return s.substr(min_l, min_r - min_l);
 	}
-
-
 
 	string minWindow0(string s, string t) {
 
@@ -617,7 +677,6 @@ public:
 		}
 	}
 
-
 	bool searchMatrix(vector<vector<int>>& matrix, int target) {
 		int n = matrix.size();
 		if (n == 0)
@@ -641,7 +700,6 @@ public:
 		}
 		return false;
 	}
-
 
 	void setZeroes(vector<vector<int>>& matrix) {
 		int n = matrix.size();
@@ -1065,9 +1123,6 @@ public:
 		return result;
 	}
 
-
-
-
 	bool isMatch(string s, string p) {
 
 		vector<Reg> lst;
@@ -1089,7 +1144,6 @@ public:
 		}
 		return true;
 	}
-
 
 	void combinationSumR(vector<int>& candidates, int target,int start_idx) {
 		vector<int> result;
@@ -1753,15 +1807,32 @@ int main()
 	vector<int> vs2 = { 3,1 };
 	vector<int> vs3 = {  };
 	vector<int> vs4 = { 1,1 };
-	cout << so.minWindow("a", "b") << endl;
-	cout << so.minWindow("ADOBECODEBANC", "ABC") << endl;
 
-	cout << so.minWindow("acbbaca", "aba") << endl;
-	cout << so.minWindow("ABAACBAB", "ABC") << endl;
 
-	cout << so.minWindow("ABAACBAB", "CF") << endl;
-	cout << so.minWindow("a", "a") << endl;
-	cout << so.minWindow("a", "aa") << endl;
+	printVector(so.combine(4, 1));
+
+	printVector(so.combine(4, 2));
+	printVector(so.combine(4, 3));
+	printVector(so.combine(4, 4));
+
+	//printListNode(so.partition(fromArray({1,4,3,2,5,2}),3));
+	//printListNode(so.partition(fromArray({}), 3));
+
+	//printListNode(so.partition(fromArray({1}), 3));
+
+	//printListNode(so.partition(fromArray({ 3 }), 3));
+
+
+
+	//cout << so.minWindow("a", "b") << endl;
+	//cout << so.minWindow("ADOBECODEBANC", "ABC") << endl;
+
+	//cout << so.minWindow("acbbaca", "aba") << endl;
+	//cout << so.minWindow("ABAACBAB", "ABC") << endl;
+
+	//cout << so.minWindow("ABAACBAB", "CF") << endl;
+	//cout << so.minWindow("a", "a") << endl;
+	//cout << so.minWindow("a", "aa") << endl;
 
 	//auto nd = fromArray({1,2,3,3,4,4,5});
 	//printListNode(so.deleteDuplicates(nd));
