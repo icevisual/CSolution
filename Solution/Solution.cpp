@@ -160,12 +160,77 @@ public:
 		return result;
 	}
 
-	vector<vector<int>> combine(int n, int k) {
+	vector<vector<int>> combine0(int n, int k) {
 		return combineR(1,n,k);
 	}
 
-	vector<vector<int>> combine1(int n, int k) {
-		return combineR(1, n, k);
+	vector<vector<int>> combine(int n, int k) {
+
+		vector<vector<int>> result;
+		stack<int> stk;
+
+		stk.push(1);
+
+		// 
+		//
+		vector<int> s(k);
+		s[0] = 1;
+		while (!stk.empty())
+		{
+			int f = n - (k - stk.size());
+			int t = stk.top();
+			// 填充
+			while (stk.size() < k)
+			{
+				t++;
+				stk.push( t);
+				s[stk.size() - 1] = t;
+			}
+			// 1   更换最后一个
+			result.push_back(s);
+			while (t < n) {
+				t++;
+				stk.pop();
+				stk.push(t);
+				s[stk.size() - 1] = t;
+				// 2
+				result.push_back(s);
+			}
+			
+		
+		
+
+			// 弹出没有后续的节点
+			stk.pop();
+
+			if (stk.empty())
+				break;
+
+
+			
+			t = stk.top();
+			f = n - (k - stk.size());
+
+			while(!stk.empty() && t >=f)
+			{
+				stk.pop();
+				if (stk.empty())
+					break;
+				t = stk.top();
+				f = n - (k - stk.size());
+			}
+
+
+			if (t < f) {
+				t++;
+				stk.pop();
+				stk.push(t);
+				s[stk.size() - 1] = t;
+			}
+		}
+
+
+		return result;
 	}
 
 
@@ -1814,6 +1879,8 @@ int main()
 	printVector(so.combine(4, 2));
 	printVector(so.combine(4, 3));
 	printVector(so.combine(4, 4));
+	printVector(so.combine(5, 4));
+	printVector(so.combine(5, 3));
 
 	//printListNode(so.partition(fromArray({1,4,3,2,5,2}),3));
 	//printListNode(so.partition(fromArray({}), 3));
