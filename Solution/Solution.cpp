@@ -164,6 +164,25 @@ public:
 		return combineR(1,n,k);
 	}
 
+	vector<vector<int>> subsets(vector<int>& nums) {
+		vector<vector<int>> result;
+
+		result.push_back({});
+		int n = nums.size();
+		for (int i = 1; i <= nums.size(); i++)
+		{
+			vector<vector<int>> sub = combine(n,i);
+			for (int j = 0; j < sub.size(); j++)
+			{
+				result.push_back({});
+				for (int k = 0; k < sub[j].size(); k++)
+					result[result.size() - 1].push_back(nums[sub[j][k] - 1]);
+			}
+		}
+
+		return result;
+	}
+
 	vector<vector<int>> combine(int n, int k) {
 
 		vector<vector<int>> result;
@@ -1871,16 +1890,20 @@ int main()
 	};
 	vector<int> vs2 = { 3,1 };
 	vector<int> vs3 = {  };
-	vector<int> vs4 = { 1,1 };
+	vector<int> vs4 = { 2,3,4 };
 
 
-	printVector(so.combine(4, 1));
+	
+	printVector(so.subsets(vs4));
 
-	printVector(so.combine(4, 2));
-	printVector(so.combine(4, 3));
-	printVector(so.combine(4, 4));
-	printVector(so.combine(5, 4));
-	printVector(so.combine(5, 3));
+
+	//printVector(so.combine(4, 1));
+
+	//printVector(so.combine(4, 2));
+	//printVector(so.combine(4, 3));
+	//printVector(so.combine(4, 4));
+	//printVector(so.combine(5, 4));
+	//printVector(so.combine(5, 3));
 
 	//printListNode(so.partition(fromArray({1,4,3,2,5,2}),3));
 	//printListNode(so.partition(fromArray({}), 3));
