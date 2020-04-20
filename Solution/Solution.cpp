@@ -146,7 +146,59 @@ public:
 			return result;
 		}
 
+		if (newInterval[1] < intervals[0][0]) {
 
+			result.push_back(newInterval);
+			
+			for (int i = 0; i < n; i++)
+				result.push_back(intervals[i]);
+			return result;
+		}
+		if (newInterval[0] > intervals[n - 1][1]) {
+
+			for (int i = 0; i < n; i++)
+				result.push_back(intervals[i]);
+
+			result.push_back(newInterval);
+			return result;
+		}
+
+		int i = 0;
+
+		while (i < n && intervals[i][1] < newInterval[0])
+		{
+			result.push_back(intervals[i]);
+			i++;
+		}
+
+		newInterval[0] = min(newInterval[0],intervals[i][0]);
+
+		while (i < n && intervals[i][1] < newInterval[1])
+		{
+			i++;
+		}
+		if (i == n)
+		{
+			result.push_back(newInterval);
+			return result;
+		}
+		else
+		{
+			if (newInterval[1] < intervals[i][0])
+			{
+				result.push_back(newInterval);
+
+			}
+			else
+			{
+				newInterval[1] = intervals[i][1];
+				result.push_back(newInterval);
+				i++;
+			}
+		}
+
+		for (; i < n; i++)
+			result.push_back(intervals[i]);
 		return result;
 	}
 
@@ -2009,11 +2061,26 @@ int main()
 	vector<int> vs3 = {  };
 	vector<int> vs4 = { 2,3,4 };
 
-	vector<vector<int>>  i0 = { {5,12} };
-	vector<int> it0 = { 7, 18 };
+	vector<vector<int>>  i0 = { {1,2},{3,5},{6,7},{8,10},{13,16} };
+	vector<int> it0 = { 4, 8 };
+	vector<int> it1 = { 24, 28 };
+
+	vector<int> it2 = { 16, 28 };
+	vector<int> it3 = { 4, 28 };
+
+	vector<int> it4 = { 14, 15 };
+	vector<int> it5 = { 11, 12 };
+
+
 	// printVector(so.subsets(vs4));
 
 	printVector(so.insert(i0, it0));
+	printVector(so.insert(i0, it1));
+	printVector(so.insert(i0, it2));
+	printVector(so.insert(i0, it3));
+	printVector(so.insert(i0, it4));
+	printVector(so.insert(i0, it5));
+
 
 
 	//printVector(so.combine(4, 1));
