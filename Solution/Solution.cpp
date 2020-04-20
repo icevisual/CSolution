@@ -134,6 +134,172 @@ struct TreeNode {
 class Solution {
 
 public:   
+
+
+	vector<vector<int>> insert(vector<vector<int>>& intervals, vector<int>& newInterval) {
+	
+		vector<vector<int>> result;
+		int n = intervals.size();
+		if (n == 0)
+		{
+			result.push_back(newInterval);
+			return result;
+		}
+
+
+		return result;
+	}
+
+	int halfSearch2(vector<vector<int>> data, int target, int start, int end) {
+
+		if (start >= end)
+		{
+			if (target < data[start][0])
+				return start - 1;
+			return start;
+		}
+		int mid = int((start + end) / 2);
+
+		if (data[mid][0] == target)
+			return mid;
+		else if (data[mid][0] > target)
+			return halfSearch2(data, target, start, mid - 1);
+		else
+			return halfSearch2(data, target, mid + 1, end);
+	}
+
+
+	vector<vector<int>> insert0(vector<vector<int>>& intervals, vector<int>& newInterval) {
+		vector<vector<int>> result;
+		int n = intervals.size();
+		if (n == 0)
+		{
+			result.push_back(newInterval);
+			return result;
+		}
+
+		int idx0 = halfSearch2(intervals, newInterval[0], 0, n - 1);
+		int idx1 = halfSearch2(intervals, newInterval[1], 0, n - 1);
+
+		int remove_l = -1;
+		int remove_r = -1;
+		int insert_idx = 0;
+
+		if (idx0 == -1)
+		{
+			if (idx1 == -1) 
+			{
+			// insert before first
+			}
+			else
+			{
+				remove_l = 0;
+				remove_r = idx1;
+				if (newInterval[1] < intervals[idx1][1]) {
+					newInterval[1] = intervals[idx1][1];
+				}
+			}
+
+		
+
+		}
+		else
+		{
+			if (newInterval[0] > intervals[idx0][1])
+			{
+				remove_l = idx0 + 1;
+				remove_r = idx1;
+				if (newInterval[1] < intervals[idx1][1]) {
+					newInterval[1] = intervals[idx1][1];
+				}
+			}
+			else 
+			{
+				newInterval[0] = intervals[idx0][0];
+				remove_l = idx0;
+				remove_r = idx1;
+				if (newInterval[1] < intervals[idx1][1]) {
+					newInterval[1] = intervals[idx1][1];
+				}
+			}
+
+			insert_idx = remove_l;
+		}
+		int i = 0;
+		for (; i < n; i++)
+		{
+			if (insert_idx == i)
+			{
+				result.push_back(newInterval);
+
+			}
+			if (i >= remove_l && i <= remove_r)
+			{
+
+			}
+			else
+			{
+				result.push_back(intervals[i]);
+				
+			}
+		}
+		if (insert_idx == i)
+		{
+			result.push_back(newInterval);
+
+		}
+	
+		return result;
+	}
+
+	bool isMatch(string s, string p) {
+
+		vector<Reg> lst;
+		int len = p.length();
+		for (int i = 0; i < len; i++) {
+
+			if (s.at(i) == '.') {
+
+			}
+			else if (s.at(i) == '*') {
+
+			}
+			else {
+
+			}
+
+
+
+		}
+		return true;
+	}
+
+
+	vector<vector<int>> subsets1(vector<int>& nums) {
+		vector<vector<int>> res;
+		vector<int> cur;
+
+		backtracking2(res, nums, cur, 0);
+		return res;
+	}
+
+	// 
+	// 
+	// 
+	void backtracking2(vector<vector<int>>& res, vector<int>& nums, vector<int>& cur, int i) {
+		if (i == nums.size()) {
+			res.push_back(cur);
+			return;
+		}
+
+		backtracking2(res, nums, cur, i + 1);
+		cur.push_back(nums[i]);
+		backtracking2(res, nums, cur, i + 1);
+		cur.pop_back();
+	}
+
+
+
 	vector<vector<int>> combineR(int n0,int n1, int k) {
 		vector<vector<int>> result;
 		
@@ -1180,55 +1346,6 @@ public:
 		
 	}
 
-	int halfSearch2(vector<vector<int>> data, int target, int start, int end) {
-
-		if (start >= end)
-		{
-			if (target < data[start][0])
-				return start - 1;
-			return start;
-		}
-		int mid = int((start + end) / 2);
-
-		if (data[mid][0] >= target && data[mid][1] <= target)
-			return mid;
-		else if (data[mid][0] > target)
-			return halfSearch2(data, target, start, mid - 1);
-		else
-			return halfSearch2(data, target, mid + 1, end);
-	}
-
-	vector<vector<int>> insert(vector<vector<int>>& intervals, vector<int>& newInterval) {
-		vector<vector<int>> result;
-
-		
-
-
-		return result;
-	}
-
-	bool isMatch(string s, string p) {
-
-		vector<Reg> lst;
-		int len = p.length();
-		for (int i = 0; i < len; i++) {
-			
-			if (s.at(i) == '.') {
-			
-			}
-			else if (s.at(i) == '*') {
-			
-			}
-			else {
-			
-			}
-
-
-		
-		}
-		return true;
-	}
-
 	void combinationSumR(vector<int>& candidates, int target,int start_idx) {
 		vector<int> result;
 		int t = target;
@@ -1892,9 +2009,11 @@ int main()
 	vector<int> vs3 = {  };
 	vector<int> vs4 = { 2,3,4 };
 
+	vector<vector<int>>  i0 = { {5,12} };
+	vector<int> it0 = { 7, 18 };
+	// printVector(so.subsets(vs4));
 
-	
-	printVector(so.subsets(vs4));
+	printVector(so.insert(i0, it0));
 
 
 	//printVector(so.combine(4, 1));
